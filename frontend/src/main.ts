@@ -42,7 +42,7 @@ btnSubmitUser.addEventListener('click', async (e) => {
   const username = inputAddUser.value
   const password = inputAddPassword.value
 
-  const res = await fetch('backend-production-ecc8.up.railway.app:3000/auth/create-user', {
+  const res = await fetch('https://backend-production-ecc8.up.railway.app:3000/auth/create-user', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ btnLogin.addEventListener('click', async (e) => {
 
   if (!username || !password) return
 
-  const res = await fetch('backend-production-ecc8.up.railway.app:3000/auth/login', {
+  const res = await fetch('https://backend-production-ecc8.up.railway.app:3000/auth/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ function mostrarApp() {
 }
 
 async function cargarDatos() {
-  const res = await fetch('backend-production-ecc8.up.railway.app:3000/bingo')
+  const res = await fetch('https://backend-production-ecc8.up.railway.app:3000/bingo')
   datos = await res.json()
 
   if (localStorage.getItem('admin')) {
@@ -160,7 +160,7 @@ form.addEventListener('submit', async (e) => {
     .value
   const cuotasPagas = cantCuotasPagas()
 
-  const res = await fetch('backend-production-ecc8.up.railway.app:3000/bingo', {
+  const res = await fetch('https://backend-production-ecc8.up.railway.app:3000/bingo', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -253,7 +253,7 @@ buscador.addEventListener('input', () => {
   }, 300)
 })
 
-const socket = io('backend-production-ecc8.up.railway.app:3001')
+const socket = io('https://backend-production-ecc8.up.railway.app:3001')
 
 socket.on('actualizar-tabla', () => {
   console.log('Actualizar datos')
