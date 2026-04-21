@@ -27,22 +27,36 @@
     <div class="contenedor-login-fondo oculto" id="contenedor-login-fondo">
       <button class="btn-cerrar-form" id="btn-cerrar-login">X</button>
       <form class="contenedor-login">
-        <input id="input-submit-name" type="text" placeholder="Nombre y apellido">
+        <input
+          id="input-submit-name"
+          type="text"
+          placeholder="Nombre y apellido"
+        />
         <input id="input-submit-user" type="text" placeholder="Usuario" />
         <input
           id="input-submit-password"
           type="password"
           placeholder="Contraseña"
         />
-        <input class="btn-submit-user" type="submit" value="Agregar Usuario" id="submit-user">
+        <input
+          class="btn-submit-user"
+          type="submit"
+          value="Agregar Usuario"
+          id="submit-user"
+        />
       </form>
     </div>
     <form id="login" class="contenedor-login">
       <h1>Inicio Sesión<br />Monitoreo Bingo</h1>
       <img src="./public/favicon.png" alt="Logo Fundación SENO" />
-      <input id="user" placeholder="Usuario" required/>
-      <input id="pass" type="password" placeholder="Contraseña" required/>
-      <input type="submit" id="btn-login" value="Iniciar Sesión" class="btn-login">
+      <input id="user" placeholder="Usuario" required />
+      <input id="pass" type="password" placeholder="Contraseña" required />
+      <input
+        type="submit"
+        id="btn-login"
+        value="Iniciar Sesión"
+        class="btn-login"
+      />
     </form>
     <main class="contenedor-principal oculto" id="app">
       <div class="contenedor-control">
@@ -67,38 +81,22 @@
             </th>
           </tr>
         </thead>
-        <tbody id="tabla-body">
-          <tr>
-            <td>395</td>
-            <td>Santiago</td>
-            <td>Sieghart</td>
-            <td>Gatica 1971</td>
-            <td>+5492995468452</td>
-            <td>Don Bosco II</td>
-            <td>Casa</td>
-            <td>04/2026</td>
-            <td>19/04/2026</td>
-            <td>Neuquén</td>
-            <td>
-              <div class="indicador-cuotas-pagas">
-                <div class="cuota-paga">1</div>
-                <div class="cuota-paga">2</div>
-                <div class="cuota-paga">3</div>
-                <div class="cuota-no-paga">4</div>
-                <div class="cuota-vacia">5</div>
-                <div class="cuota-vacia">6</div>
-                <div class="cuota-vacia">7</div>
-                <div class="cuota-vacia">8</div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+        <tbody id="tabla-body"></tbody>
       </table>
     </main>
     <table class="leyenda oculto" id="leyenda">
-      <tr><td>Futura cuota</td><td><div class="cuota-vacia"></div></td></tr>
-      <tr><td>Cuota no paga</td><td><div class="cuota-no-paga"></div></td></tr>
-      <tr><td>Cuota paga</td><td><div class="cuota-paga"></div></td></tr>
+      <tr>
+        <td>Futura cuota</td>
+        <td><div class="cuota-vacia"></div></td>
+      </tr>
+      <tr>
+        <td>Cuota no paga</td>
+        <td><div class="cuota-no-paga"></div></td>
+      </tr>
+      <tr>
+        <td>Cuota paga</td>
+        <td><div class="cuota-paga"></div></td>
+      </tr>
     </table>
     <div class="contenedor-form escondido" id="contenedor-form">
       <button class="btn-cerrar-form" id="btn-cerrar-form">X</button>
