@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png+xml" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monitoreo Bingo - Input</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input/build/css/intlTelInput.css"
+    />
+  </head>
+  <body>
+    <button class="btn-add-user oculto" id="btn-add-user">
+      <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+      <svg
+        width="800px"
+        height="800px"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M2,21h8a1,1,0,0,0,0-2H3.071A7.011,7.011,0,0,1,10,13a5.044,5.044,0,1,0-3.377-1.337A9.01,9.01,0,0,0,1,20,1,1,0,0,0,2,21ZM10,5A3,3,0,1,1,7,8,3,3,0,0,1,10,5ZM23,16a1,1,0,0,1-1,1H19v3a1,1,0,0,1-2,0V17H14a1,1,0,0,1,0-2h3V12a1,1,0,0,1,2,0v3h3A1,1,0,0,1,23,16Z"
+        />
+      </svg>
+    </button>
+    <div class="contenedor-login-fondo oculto" id="contenedor-login-fondo">
+      <button class="btn-cerrar-form" id="btn-cerrar-login">X</button>
+      <form class="contenedor-login">
+        <input id="input-submit-name" type="text" placeholder="Nombre y apellido">
+        <input id="input-submit-user" type="text" placeholder="Usuario" />
+        <input
+          id="input-submit-password"
+          type="password"
+          placeholder="Contraseña"
+        />
+        <input class="btn-submit-user" type="submit" value="Agregar Usuario" id="submit-user">
+      </form>
+    </div>
+    <form id="login" class="contenedor-login">
+      <h1>Inicio Sesión<br />Monitoreo Bingo</h1>
+      <img src="./public/favicon.png" alt="Logo Fundación SENO" />
+      <input id="user" placeholder="Usuario" required/>
+      <input id="pass" type="password" placeholder="Contraseña" required/>
+      <input type="submit" id="btn-login" value="Iniciar Sesión" class="btn-login">
+    </form>
+    <main class="contenedor-principal oculto" id="app">
+      <div class="contenedor-control">
+        <input type="text" id="buscador" placeholder="Buscar..." />
+        <button id="btn-add">Nuevo Participante</button>
+      </div>
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th data-campo="numero_bingo">Numero Bingo</th>
+            <th data-campo="nombre">Nombre</th>
+            <th data-campo="apellido">Apellido</th>
+            <th data-campo="domicilio">Domicilio</th>
+            <th data-campo="telefono">Teléfono</th>
+            <th data-campo="barrio">Barrio</th>
+            <th data-campo="lugar_de_cobro">Lugar de Cobro</th>
+            <th data-campo="mes_inicio">Mes Inicio</th>
+            <th data-campo="fecha_de_cobro">Fecha de Cobro</th>
+            <th data-campo="localidad">Localidad</th>
+            <th data-campo="cuotas-pagas" class="cabecera-cuotas-pagas">
+              Cuotas Pagas
+            </th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body">
+          <tr>
+            <td>395</td>
+            <td>Santiago</td>
+            <td>Sieghart</td>
+            <td>Gatica 1971</td>
+            <td>+5492995468452</td>
+            <td>Don Bosco II</td>
+            <td>Casa</td>
+            <td>04/2026</td>
+            <td>19/04/2026</td>
+            <td>Neuquén</td>
+            <td>
+              <div class="indicador-cuotas-pagas">
+                <div class="cuota-paga">1</div>
+                <div class="cuota-paga">2</div>
+                <div class="cuota-paga">3</div>
+                <div class="cuota-no-paga">4</div>
+                <div class="cuota-vacia">5</div>
+                <div class="cuota-vacia">6</div>
+                <div class="cuota-vacia">7</div>
+                <div class="cuota-vacia">8</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+    <table class="leyenda oculto" id="leyenda">
+      <tr><td>Futura cuota</td><td><div class="cuota-vacia"></div></td></tr>
+      <tr><td>Cuota no paga</td><td><div class="cuota-no-paga"></div></td></tr>
+      <tr><td>Cuota paga</td><td><div class="cuota-paga"></div></td></tr>
+    </table>
+    <div class="contenedor-form escondido" id="contenedor-form">
+      <button class="btn-cerrar-form" id="btn-cerrar-form">X</button>
+      <form id="form" class="formulario">
+        <label for="numero-bingo">
+          <p>Numero Bingo</p>
+          <input type="number" id="numero-bingo" required />
+        </label>
+        <div class="container-nombre-apellido">
+          <label for="nombre">
+            <p>Nombre</p>
+            <input type="text" id="nombre" required />
+          </label>
+          <label for="apellido">
+            <p>Apellido</p>
+            <input type="text" id="apellido" required />
+          </label>
+        </div>
+        <label for="domicilio">
+          <p>Domicilio</p>
+          <input type="text" id="domicilio" required />
+        </label>
+        <label for="telefono">
+          <p>Teléfono</p>
+          <input
+            type="tel"
+            name="telefono"
+            id="telefono"
+            placeholder="2991234567"
+            required
+          />
+        </label>
+        <label for="barrio">
+          <p>Barrio</p>
+          <input type="text" id="barrio" required />
+        </label>
+        <label for="lugar-de-cobro">
+          <p>Lugar de Cobro</p>
+          <input type="text" id="lugar-de-cobro" required />
+        </label>
+        <label for="mes-inicio">
+          <p>Mes Inicio</p>
+          <input type="month" name="mes-inicio" id="mes-inicio" required />
+        </label>
+        <label for="fecha-de-cobro">
+          <p>Fecha de Cobro</p>
+          <input
+            type="date"
+            name="fecha-de-cobro"
+            id="fecha-de-cobro"
+            required
+          />
+        </label>
+        <label for="localidad">
+          <p>Localidad</p>
+          <input type="text" name="localidad" id="localidad" required />
+        </label>
+        <label class="cuotas">
+          Cuotas pagas
+          <label><input type="checkbox" name="" class="check-cuotas" />1</label>
+          <label><input type="checkbox" name="" class="check-cuotas" />2</label>
+          <label><input type="checkbox" name="" class="check-cuotas" />3</label>
+          <label><input type="checkbox" name="" class="check-cuotas" />4</label>
+          <label><input type="checkbox" name="" class="check-cuotas" />5</label>
+          <label><input type="checkbox" name="" class="check-cuotas" />6</label>
+          <label><input type="checkbox" name="" class="check-cuotas" />7</label>
+          <label><input type="checkbox" name="" class="check-cuotas" />8</label>
+        </label>
+        <input type="submit" value="Enviar" class="btn-submit" />
+      </form>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/btnAdd.ts"></script>
+    <script type="module" src="/src/selectCuotas.ts"></script>
+  </body>
+</html>

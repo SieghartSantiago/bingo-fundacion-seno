@@ -1,0 +1,376 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100dvh;
+  padding-top: 20px;
+  position: relative;
+}
+
+.btn-add-user {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background-color: #fff;
+  border: 1px solid #111;
+  border-radius: 2px;
+  height: 30px;
+  width: 30px;
+  transition:
+    background-color 0.3s ease-in,
+    color 0.3s ease-in;
+}
+
+.btn-add-user.oculto {
+  display: none;
+}
+
+.btn-add-user:hover {
+  background-color: #111;
+  color: #eee;
+  cursor: pointer;
+}
+
+.btn-add-user:hover svg {
+  fill: currentColor;
+}
+
+.btn-add-user svg {
+  position: relative;
+  top: 0;
+  width: 25px;
+  height: 25px;
+  transition: fill 0.3s ease-in;
+}
+
+.contenedor-login-fondo {
+  background-color: #3232324d;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.contenedor-login-fondo .contenedor-login {
+  padding-top: 10px;
+}
+
+.contenedor-login-fondo.oculto {
+  display: none;
+}
+
+.contenedor-login {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  height: fit-content;
+  width: fit-content;
+  margin: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 40px;
+  border: 3px solid #208820;
+  border-radius: 15px;
+
+  color: #208820;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  background-color: #fff;
+}
+
+.contenedor-login img {
+  width: 160px;
+}
+
+.contenedor-login input:not(.btn-submit-user):not(.btn-login) {
+  border: none;
+  border-bottom: 1px solid #208820;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 2px;
+}
+
+.btn-login, .btn-submit-user {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  border-top: 1px solid #208820;
+  transition:
+    background-color 0.3s ease-in,
+    color 0.3s ease-in;
+  height: 30px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  color: #208820;
+  font-weight: bolder;
+  font-size: 1.2rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.btn-login:hover, .btn-submit-user:hover {
+  color: #eee;
+  background-color: #208820;
+  cursor: pointer;
+}
+
+.contenedor-principal.oculto {
+  display: none;
+}
+
+.contenedor-control {
+  display: flex;
+  justify-content: center;
+  height: 25px;
+  margin-bottom: 20px;
+}
+
+.contenedor-control button {
+  padding-inline: 5px;
+  margin-left: 10px;
+  border: 1px solid #111;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in;
+}
+
+.contenedor-control button:hover {
+  cursor: pointer;
+  background-color: #c0c0c0;
+}
+
+.contenedor-principal {
+  width: 90%;
+  height: 90%;
+  overflow: auto;
+  margin-inline: auto;
+}
+
+.tabla {
+  border-collapse: collapse;
+}
+
+.tabla th:hover {
+  cursor: pointer;
+}
+
+.tabla th,
+.tabla td {
+  border: 1px solid #111;
+  padding: 5px;
+  text-align: center;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Open Sans',
+    'Helvetica Neue',
+    sans-serif;
+}
+
+.tabla tr {
+  height: 50px;
+}
+
+.cabecera-cuotas-pagas {
+  min-width: calc(8 * (25px + 5px));
+}
+
+.indicador-cuotas-pagas {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+}
+
+.indicador-cuotas-pagas div {
+  height: 25px;
+  width: 25px;
+  border: 1px solid #111;
+}
+
+.cuota-paga {
+  background-color: #23af23;
+}
+
+.cuota-no-paga {
+  background-color: #ffff10;
+}
+
+.cuota-vacia {
+  background-color: transparent;
+}
+
+.leyenda {
+  width: 90%;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.leyenda.oculto {
+  display: none;
+}
+
+.leyenda td:first-child {
+  padding-inline: 5px;
+}
+
+.leyenda div {
+  height: 25px;
+  width: 25px;
+  border: 1px solid #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.contenedor-form {
+  background-color: #3232324d;
+  height: 100dvh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: none;
+}
+
+.contenedor-form.escondido,
+.contenedor-form.escondido .formulario,
+.contenedor-form.escondido .btn-cerrar-form {
+  display: none;
+}
+
+.btn-cerrar-form {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  right: 50px;
+  top: 50px;
+  background-color: #1a1919;
+  border: none;
+  color: white;
+  font-weight: bolder;
+  font-size: 2rem;
+  transition: background-color 0.3s ease-in;
+  border-radius: 100%;
+}
+
+.btn-cerrar-form:hover {
+  background-color: #5c5a5a;
+  cursor: pointer;
+}
+
+.formulario {
+  font-family: Arial, Helvetica, sans-serif;
+  flex-direction: column;
+  position: absolute;
+  max-width: 60%;
+  height: fit-content;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  pointer-events: all;
+
+  background-color: #fff;
+
+  border: 3px solid #23af23;
+  border-radius: 10px;
+  padding: 3px;
+  padding-bottom: 15px;
+
+  overflow: auto;
+}
+
+.formulario label {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.formulario label p {
+  margin-right: 2px;
+}
+
+.iti {
+  flex-grow: 1;
+  display: flex;
+}
+
+.formulario label input,
+#telefono {
+  flex-grow: 1;
+  border: none;
+  border-bottom: 1px solid #444;
+  text-align: center;
+}
+
+.container-nombre-apellido {
+  display: flex;
+}
+
+.btn-submit {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2rem;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  border-top: 1px solid #23af23;
+  transition:
+    background-color 0.3s ease-in,
+    color 0.3s ease-in;
+}
+
+.btn-submit:hover {
+  background-color: #23af23;
+  color: #eee;
+}
+
+.formulario label.cuotas {
+  display: flex;
+  justify-content: space-around;
+  height: 70px;
+  text-align: center;
+}
+
+.formulario label.cuotas label {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+@media screen and (max-width: 780px) {
+  .container-nombre-apellido {
+    flex-direction: column;
+  }
+}
