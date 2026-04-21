@@ -13,6 +13,8 @@ const limiter = rateLimit({
   max: 100, // max 100 requests
 })
 
+console.log("authRoutes:", authRoutes)
+
 dotenv.config()
 console.log(new URL(process.env.DATABASE_URL!))
 
@@ -21,7 +23,7 @@ app.use(express.json())
 app.use(limiter)
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: '*',
   }),
 )
 app.use('/auth', authRoutes)
@@ -41,11 +43,11 @@ app.get('/', (req, res) => {
   res.send('Hola mundo')
 })
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log('Servidor corriendo en puerto 3000')
 })
 
-server.listen(3001, () => {
+server.listen(process.env.PORTWS || 3001, () => {
   console.log('Servidor corriendo en 3001')
 })
 
