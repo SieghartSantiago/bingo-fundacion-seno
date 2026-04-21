@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt'
-import { pool } from '../db'
+import { pool } from '../db.js'
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import type { Request, Response } from 'express'
-import auth, { AuthRequest } from '../middleware/auth'
+import auth, { AuthRequest } from '../middleware/auth.js'
 
 const router = express.Router()
 
