@@ -5,7 +5,7 @@ import { z } from 'zod'
 import cors from 'cors'
 import http from 'http'
 import { Server } from 'socket.io'
-import authRoutes from './routes/auth'
+import authRoutes from './routes/auth.js'
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min
