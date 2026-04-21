@@ -4,6 +4,7 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import type { Request, Response } from 'express'
 import auth, { AuthRequest } from '../middleware/auth.js'
+import { addHistorial } from '../app.js'
 
 const router = express.Router()
 
@@ -26,7 +27,7 @@ router.post('/login', async (req: Request, res: Response) => {
     return res.status(401).json({ error: 'Contraseña incorrecta' })
   }
 
-  const token = jwt.sign({ id: user.id}, process.env.JWT_SECRET as string)
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string)
 
   const admin = user.admin
 
@@ -57,12 +58,27 @@ router.post('/create-user', auth, async (req: AuthRequest, res) => {
 
     const hash = await bcrypt.hash(password, 10)
 
-    await pool.query(
-      'INSERT INTO login (username, password_hash, nombre) VALUES ($1, $2, $3)',
+    const insertResult = await pool.query(
+      'INSERT INTO login (username, password_hash, nombre) VALUES ($1, $2, $3) RETURNING id',
       [username, hash, name],
     )
 
     res.json({ ok: true })
+
+    const newUserId = insertResult.rows[0].id
+
+    await addHistorial(
+      'login',
+      newUserId,
+      'INSERT',
+      null,
+      {
+        username,
+        nombre: name,
+        admin: false,
+      },
+      req.user!.id,
+    )
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Error creando usuario' })

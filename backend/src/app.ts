@@ -7,6 +7,7 @@ import http from 'http'
 import { pool } from './db.js'
 import { Server } from 'socket.io'
 import authRoutes from './routes/auth.js'
+import auth, { AuthRequest } from './middleware/auth.js'
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min
@@ -70,7 +71,7 @@ const schema = z.object({
   cuotasPagas: z.coerce.number().min(0).max(8),
 })
 
-app.post('/bingo', async (req, res) => {
+app.post('/bingo', auth, async (req: AuthRequest, res) => {
   const parsed = schema.safeParse(req.body)
 
   if (!parsed.success) {
@@ -122,6 +123,28 @@ app.post('/bingo', async (req, res) => {
 
     io.emit('actualizar-tabla')
     res.json({ ok: true, id: result.rows[0].id })
+    const id = result.rows[0].id
+    const usuarioId = req.user!.id
+    await addHistorial(
+      'bingo',
+      id,
+      'INSERT',
+      null,
+      {
+        numeroBingo,
+        nombre,
+        apellido,
+        domicilio,
+        barrio,
+        localidad,
+        telefono,
+        lugarDeCobro,
+        mesInicio: stringFechaMesInicio,
+        fechaDeCobro,
+        cuotasPagas,
+      },
+      usuarioId,
+    )
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: err })
@@ -147,7 +170,6 @@ app.get('/bingo', async (req, res) => {
       ORDER BY numero_bingo
     `)
 
-    // 🔥 adaptar formato para frontend
     const data = result.rows
     res.json(data)
   } catch (err) {
@@ -155,3 +177,30 @@ app.get('/bingo', async (req, res) => {
     res.status(500).json({ error: 'Error obteniendo datos' })
   }
 })
+
+export async function addHistorial(
+  tabla: string,
+  registroId: number,
+  accion: string,
+  datosAnteriores: any,
+  datosNuevos: any,
+  usuarioId: number,
+): Promise<void> {
+  try {
+    await pool.query(
+      `INSERT INTO historial 
+      (tabla_afectada, registro_id, accion, datos_anteriores, datos_nuevos, usuario_id)
+      VALUES ($1, $2, $3, $4, $5, $6)`,
+      [
+        tabla,
+        registroId,
+        accion,
+        datosAnteriores ? JSON.stringify(datosAnteriores) : null,
+        datosNuevos ? JSON.stringify(datosNuevos) : null,
+        usuarioId,
+      ],
+    )
+  } catch (err) {
+    console.error('Error guardando historial:', err)
+  }
+}
