@@ -4,6 +4,7 @@ import rateLimit from 'express-rate-limit'
 import { z } from 'zod'
 import cors from 'cors'
 import http from 'http'
+import { pool } from './db.js'
 import { Server } from 'socket.io'
 import authRoutes from './routes/auth.js'
 
@@ -48,7 +49,6 @@ server.listen(3001, () => {
   console.log('Servidor corriendo en 3001')
 })
 
-import { pool } from './db'
 app.get('/test-db', async (req, res) => {
   const result = await pool.query('SELECT NOW()')
   res.json(result.rows)
