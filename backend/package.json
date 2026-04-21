@@ -23,6 +23,7 @@
     "ts-node": "^10.9.2"
   },
   "scripts": {
-    "dev": "nodemon --exec npx ts-node ./src/app.ts"
+    "dev": "nodemon --exec npx ts-node ./src/app.ts",
+    "start": "node dist/index.js"
   }
 }
