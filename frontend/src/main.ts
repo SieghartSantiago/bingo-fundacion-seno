@@ -79,20 +79,13 @@ export const arrConfigAvisos: number[] = [0, 0]
 let numPantallaActual: number = parseInt(localStorage.getItem('pantalla')!) || 0
 export let numeroBingoCambiando: number | null = null
 export let idUsuarioCambiando: number | null = null
+export function setIdUsuarioCambiando(val : number | null) {
+  idUsuarioCambiando = val
+}
+
 export const API: string = import.meta.env.VITE_API_URL
 
 console.log(API)
-
-const socket: Socket = io(API)
-
-socket.on('actualizar-tabla', (): void => {
-  elementosHtml.cargaDiscreta.classList.add('aviso-transform')
-  cargarDatos()
-})
-
-socket.on('actualizar-perfil', (): void => {
-  window.location.href = window.location.href
-})
 
 export function mostrarApp(): void {
   elementosHtml.avisoBorrado.classList.add('aviso-transition')
@@ -110,6 +103,17 @@ export function mostrarApp(): void {
     elementosHtml.arrBtnHeader.push(elementosHtml.btnUsuarios)
     elementosHtml.arrPantallas.push(elementosHtml.contenedorUsuarios)
   }
+
+  const socket: Socket = io(API)
+
+  socket.on('actualizar-tabla', (): void => {
+    elementosHtml.cargaDiscreta.classList.add('aviso-transform')
+    cargarDatos()
+  })
+
+  socket.on('actualizar-perfil', (): void => {
+    window.location.href = window.location.href
+  })
 
   cambioPantalla(numPantallaActual)
 

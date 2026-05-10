@@ -23,6 +23,7 @@ import {
   id,
   cargandoDatos,
   arrConfigAvisos,
+  setIdUsuarioCambiando,
 } from './main.ts'
 import { cantCuotasPagas } from './selectCuotas.ts'
 import {
@@ -142,6 +143,7 @@ elementosHtml.btnAdd.addEventListener('click', (e): void => {
 
 elementosHtml.btnAddUsuario.addEventListener('click', (e): void => {
   e.preventDefault()
+  setIdUsuarioCambiando(null)
   mostrarContenedorFormUsuario()
 })
 
