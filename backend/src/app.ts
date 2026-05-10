@@ -1,25 +1,34 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
-import { z } from 'zod'
 import cors from 'cors'
 import http from 'http'
-import { pool } from './db.js'
 import { Server } from 'socket.io'
-import authRoutes from './routes/auth.js'
-import auth, { AuthRequest } from './middleware/auth.js'
+import loginPostRoutes from './routes/login.post'
+import loginGetRoutes from './routes/login.get'
+import loginDeleteRoutes from './routes/login.delete'
+import bingoGetRoutes from './routes/bingo.get'
+import historialRoutes from './routes/historial'
+import bingoPostRoutes from './routes/bingo.post'
+import bingoDeleteRoutes from './routes/bingo.delete'
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min
-  max: 100, // max 100 requests
+  max: 1000, // max 100 requests
+})
+const PORT = process.env.PORT || 3005
+export const app = express()
+const server = http.createServer(app)
+export const io = new Server(server, {
+  cors: {
+    origin: '*',
+  },
 })
 
-console.log('authRoutes:', authRoutes)
-
 dotenv.config()
+
 console.log(new URL(process.env.DATABASE_URL!))
 
-const app = express()
 app.use(express.json())
 app.use(limiter)
 app.use(
@@ -27,180 +36,18 @@ app.use(
     origin: '*',
   }),
 )
-app.use('/auth', authRoutes)
-
-const server = http.createServer(app)
-const io = new Server(server, {
-  cors: {
-    origin: '*',
-  },
-})
+app.use(bingoGetRoutes)
+app.use(bingoPostRoutes)
+app.use(historialRoutes)
+app.use(bingoDeleteRoutes)
+app.use(loginPostRoutes)
+app.use(loginGetRoutes)
+app.use(loginDeleteRoutes)
 
 io.on('connection', (socket) => {
   console.log('Cliente conectado')
 })
 
-app.get('/', (req, res) => {
-  res.send('Hola mundo')
-})
-
-const PORT = process.env.PORT || 3000
-
 server.listen(PORT, () => {
   console.log('Servidor corriendo en puerto', PORT)
 })
-
-app.get('/test-db', async (req, res) => {
-  const result = await pool.query('SELECT NOW()')
-  res.json(result.rows)
-})
-
-const schema = z.object({
-  numeroBingo: z.coerce.number().min(1),
-  nombre: z.string().min(1),
-  apellido: z.string().min(1),
-  domicilio: z.string().min(1),
-  barrio: z.string().min(1),
-  localidad: z.string().min(1),
-  telefono: z.string().min(8),
-  lugarDeCobro: z.string().min(1),
-  mesInicio: z.string().refine((val) => !isNaN(Date.parse(val))),
-  fechaDeCobro: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: 'Fecha inválida',
-  }),
-  cuotasPagas: z.coerce.number().min(0).max(8),
-})
-
-app.post('/bingo', auth, async (req: AuthRequest, res) => {
-  const parsed = schema.safeParse(req.body)
-
-  if (!parsed.success) {
-    return res.status(400).json({
-      error: 'Datos inválidos',
-      detalles: parsed.error.message,
-    })
-  }
-
-  const {
-    numeroBingo,
-    nombre,
-    apellido,
-    domicilio,
-    telefono,
-    barrio,
-    lugarDeCobro,
-    mesInicio,
-    fechaDeCobro,
-    localidad,
-    cuotasPagas,
-  } = req.body
-
-  const fechaMesInicio = new Date(mesInicio)
-  fechaMesInicio.setDate(1)
-
-  const stringFechaMesInicio = `${fechaMesInicio.getFullYear()}-${String(fechaMesInicio.getMonth() + 1).padStart(2, '0')}-${String(fechaMesInicio.getDate()).padStart(2, '0')}`
-
-  try {
-    const result = await pool.query(
-      `INSERT INTO bingo 
-      (numero_bingo, nombre, apellido, domicilio, barrio, localidad, telefono, lugar_cobro, mes_inicio, fecha_cobro, cuotas_pagas)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
-      RETURNING id`,
-      [
-        numeroBingo,
-        nombre,
-        apellido,
-        domicilio,
-        barrio,
-        localidad,
-        telefono,
-        lugarDeCobro,
-        stringFechaMesInicio,
-        fechaDeCobro,
-        cuotasPagas,
-      ],
-    )
-
-    io.emit('actualizar-tabla')
-    res.json({ ok: true, id: result.rows[0].id })
-    const id = result.rows[0].id
-    const usuarioId = req.user!.id
-    await addHistorial(
-      'bingo',
-      id,
-      'INSERT',
-      null,
-      {
-        numeroBingo,
-        nombre,
-        apellido,
-        domicilio,
-        barrio,
-        localidad,
-        telefono,
-        lugarDeCobro,
-        mesInicio: stringFechaMesInicio,
-        fechaDeCobro,
-        cuotasPagas,
-      },
-      usuarioId,
-    )
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: err })
-  }
-})
-
-app.get('/bingo', async (req, res) => {
-  try {
-    const result = await pool.query(`
-      SELECT 
-        numero_bingo,
-        nombre,
-        apellido,
-        domicilio,
-        telefono,
-        barrio,
-        lugar_cobro,
-        mes_inicio,
-        fecha_cobro,
-        localidad,
-        cuotas_pagas
-      FROM bingo
-      ORDER BY numero_bingo
-    `)
-
-    const data = result.rows
-    res.json(data)
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: 'Error obteniendo datos' })
-  }
-})
-
-export async function addHistorial(
-  tabla: string,
-  registroId: number,
-  accion: string,
-  datosAnteriores: any,
-  datosNuevos: any,
-  usuarioId: number,
-): Promise<void> {
-  try {
-    await pool.query(
-      `INSERT INTO historial 
-      (tabla_afectada, registro_id, accion, datos_anteriores, datos_nuevos, usuario_id)
-      VALUES ($1, $2, $3, $4, $5, $6)`,
-      [
-        tabla,
-        registroId,
-        accion,
-        datosAnteriores ? JSON.stringify(datosAnteriores) : null,
-        datosNuevos ? JSON.stringify(datosNuevos) : null,
-        usuarioId,
-      ],
-    )
-  } catch (err) {
-    console.error('Error guardando historial:', err)
-  }
-}

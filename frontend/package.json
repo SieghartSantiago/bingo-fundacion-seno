@@ -9,11 +9,13 @@
     "preview": "vite preview --port $PORT --host"
   },
   "devDependencies": {
+    "@types/luxon": "^3.7.1",
     "typescript": "~6.0.2",
     "vite": "^8.0.4"
   },
   "dependencies": {
     "intl-tel-input": "^27.0.11",
+    "luxon": "^3.7.2",
     "socket.io-client": "^4.8.3"
   }
 }

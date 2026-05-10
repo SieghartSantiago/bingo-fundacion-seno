@@ -1,3 +1,5 @@
+import type { Cuotas } from "./Cuotas"
+
 export type Bingo = {
   numero_bingo: number
   nombre: string
@@ -6,8 +8,13 @@ export type Bingo = {
   telefono: string
   barrio: string
   lugar_cobro: string
-  mes_inicio: string
+  mes_inicio: Date
   fecha_cobro: string
   localidad: string
-  cuotas_pagas: number
+  deshabilitado: boolean
+
+  cuotas: Cuotas[]
+  configAvisos: number[]
+
+  mes_inicio_str: string
 }
