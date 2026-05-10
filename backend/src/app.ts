@@ -50,4 +50,5 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, () => {
   console.log('Servidor corriendo en puerto', PORT)
+  process.env.BACKEND_PORT = String(PORT)
 })
