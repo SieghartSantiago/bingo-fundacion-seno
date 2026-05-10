@@ -79,7 +79,7 @@ export const arrConfigAvisos: number[] = [0, 0]
 let numPantallaActual: number = parseInt(localStorage.getItem('pantalla')!) || 0
 export let numeroBingoCambiando: number | null = null
 export let idUsuarioCambiando: number | null = null
-export const API: string = import.meta.env.VITE_API_URL + ':' + import.meta.env.VITE_API_PORT
+export const API: string = import.meta.env.VITE_API_URL
 
 const socket: Socket = io(API)
 
