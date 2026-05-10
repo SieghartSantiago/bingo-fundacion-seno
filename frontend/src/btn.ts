@@ -144,6 +144,7 @@ elementosHtml.btnAdd.addEventListener('click', (e): void => {
 elementosHtml.btnAddUsuario.addEventListener('click', (e): void => {
   e.preventDefault()
   setIdUsuarioCambiando(null)
+  vaciarInputsFormUsuario()
   mostrarContenedorFormUsuario()
 })
 
