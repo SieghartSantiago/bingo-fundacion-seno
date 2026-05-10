@@ -4,172 +4,1069 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png+xml" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Monitoreo Bingo - Input</title>
+    <title>Monitoreo Bingo</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/intl-tel-input/build/css/intlTelInput.css"
     />
   </head>
-  <body>
-    <button class="btn-add-user oculto" id="btn-add-user">
-      <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-      <svg
-        width="800px"
-        height="800px"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M2,21h8a1,1,0,0,0,0-2H3.071A7.011,7.011,0,0,1,10,13a5.044,5.044,0,1,0-3.377-1.337A9.01,9.01,0,0,0,1,20,1,1,0,0,0,2,21ZM10,5A3,3,0,1,1,7,8,3,3,0,0,1,10,5ZM23,16a1,1,0,0,1-1,1H19v3a1,1,0,0,1-2,0V17H14a1,1,0,0,1,0-2h3V12a1,1,0,0,1,2,0v3h3A1,1,0,0,1,23,16Z"
-        />
-      </svg>
-    </button>
-    <div class="contenedor-login-fondo oculto" id="contenedor-login-fondo">
-      <button class="btn-cerrar-form" id="btn-cerrar-login">X</button>
-      <form class="contenedor-login">
-        <input
-          id="input-submit-name"
-          type="text"
-          placeholder="Nombre y apellido"
-        />
-        <input id="input-submit-user" type="text" placeholder="Usuario" />
-        <input
-          id="input-submit-password"
-          type="password"
-          placeholder="Contraseña"
-        />
-        <input
-          class="btn-submit-user"
-          type="submit"
-          value="Agregar Usuario"
-          id="submit-user"
-        />
-      </form>
-    </div>
-    <form id="login" class="contenedor-login">
-      <h1>Inicio Sesión<br />Monitoreo Bingo</h1>
-      <img src="./public/favicon.png" alt="Logo Fundación SENO" />
-      <input id="user" placeholder="Usuario" required />
-      <input id="pass" type="password" placeholder="Contraseña" required />
-      <input
-        type="submit"
-        id="btn-login"
-        value="Iniciar Sesión"
-        class="btn-login"
-      />
-    </form>
-    <main class="contenedor-principal oculto" id="app">
-      <div class="contenedor-control">
-        <input type="text" id="buscador" placeholder="Buscar..." />
-        <button id="btn-add">Nuevo Participante</button>
+  <body style="overflow: hidden; height: 100dvh">
+    <section
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100dvh;
+        z-index: 1000000;
+        background-color: #f2f6fc;
+      "
+      class="pantalla-carga"
+      id="pantalla-carga"
+    >
+      <h1>CARGANDO</h1>
+      <div class="icono-carga"></div>
+    </section>
+    <section class="aviso-borrado oculto" id="aviso-borrado">
+      <div class="aviso-borrado-contenido">
+        <h1>
+          Se eliminará el número bingo
+          <span id="indicador-numero-eliminando"></span>, está segur@ que quiere
+          continuar?
+        </h1>
+        <div>
+          <button class="btn-aviso-borrado no" id="btn-aviso-borrado-no">
+            No
+          </button>
+          <button class="btn-aviso-borrado si" id="btn-aviso-borrado-si">
+            Si
+          </button>
+        </div>
       </div>
-      <table class="tabla">
-        <thead>
-          <tr>
-            <th data-campo="numero_bingo">Numero Bingo</th>
-            <th data-campo="nombre">Nombre</th>
-            <th data-campo="apellido">Apellido</th>
-            <th data-campo="domicilio">Domicilio</th>
-            <th data-campo="telefono">Teléfono</th>
-            <th data-campo="barrio">Barrio</th>
-            <th data-campo="lugar_de_cobro">Lugar de Cobro</th>
-            <th data-campo="mes_inicio">Mes Inicio</th>
-            <th data-campo="fecha_de_cobro">Fecha de Cobro</th>
-            <th data-campo="localidad">Localidad</th>
-            <th data-campo="cuotas-pagas" class="cabecera-cuotas-pagas">
-              Cuotas Pagas
-            </th>
-          </tr>
-        </thead>
-        <tbody id="tabla-body"></tbody>
-      </table>
-    </main>
-    <table class="leyenda oculto" id="leyenda">
-      <tr>
-        <td>Futura cuota</td>
-        <td><div class="cuota-vacia"></div></td>
-      </tr>
-      <tr>
-        <td>Cuota no paga</td>
-        <td><div class="cuota-no-paga"></div></td>
-      </tr>
-      <tr>
-        <td>Cuota paga</td>
-        <td><div class="cuota-paga"></div></td>
-      </tr>
-    </table>
-    <div class="contenedor-form escondido" id="contenedor-form">
-      <button class="btn-cerrar-form" id="btn-cerrar-form">X</button>
-      <form id="form" class="formulario">
-        <label for="numero-bingo">
-          <p>Numero Bingo</p>
-          <input type="number" id="numero-bingo" required />
-        </label>
-        <div class="container-nombre-apellido">
-          <label for="nombre">
-            <p>Nombre</p>
-            <input type="text" id="nombre" required />
+    </section>
+    <section class="aviso-borrado oculto" id="aviso-borrado-usuario">
+      <div class="aviso-borrado-contenido">
+        <h1>
+          Se eliminará el usuario
+          <span id="indicador-usuario-eliminando"></span>, está segur@ que
+          quiere continuar?
+        </h1>
+        <div>
+          <button
+            class="btn-aviso-borrado no"
+            id="btn-aviso-borrado-usuario-no"
+          >
+            No
+          </button>
+          <button
+            class="btn-aviso-borrado si"
+            id="btn-aviso-borrado-usuario-si"
+          >
+            Si
+          </button>
+        </div>
+      </div>
+    </section>
+    <section class="section-avisos oculto" id="contenedor-avisos">
+      <div class="aviso" id="aviso-carga-discreta">
+        <p>Actualizando tablas</p>
+        <div class="icono-carga"></div>
+      </div>
+      <div class="aviso" id="aviso-ningun-cambio">
+        <p>Ningun cambio realizado</p>
+      </div>
+      <div class="aviso" id="aviso-cambios-exito">
+        <p>Cambios realizados con éxito</p>
+      </div>
+      <div class="aviso" id="aviso-error">
+        <p id="txt-aviso-error"></p>
+      </div>
+    </section>
+    <header class="header oculto" id="contenedor-header">
+      <button
+        id="btn-home"
+        class="btn-header oculto"
+        aria-label="Ver tabla bingo"
+        type="button"
+      >
+        <?xml version="1.0" encoding="utf-8"?>
+        <svg
+          width="800px"
+          height="800px"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g clip-path="url(#clip0_15_3)">
+            <rect width="24" height="24" />
+            <path
+              d="M9 21H4C3.44772 21 3 20.5523 3 20V12.4142C3 12.149 3.10536 11.8946 3.29289 11.7071L11.2929 3.70711C11.6834 3.31658 12.3166 3.31658 12.7071 3.70711L20.7071 11.7071C20.8946 11.8946 21 12.149 21 12.4142V20C21 20.5523 20.5523 21 20 21H15M9 21H15M9 21V15C9 14.4477 9.44772 14 10 14H14C14.5523 14 15 14.4477 15 15V21"
+              stroke="#000000"
+              stroke-width="1.5"
+              stroke-linejoin="round"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_15_3">
+              <rect width="24" height="24" />
+            </clipPath>
+          </defs>
+        </svg>
+      </button>
+      <button
+        id="btn-historial"
+        class="btn-header oculto"
+        aria-label="Ver historial"
+        type="button"
+      >
+        <?xml version="1.0" encoding="utf-8"?>
+        <svg
+          width="800px"
+          height="800px"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 8V12L14.5 14.5"
+            stroke="#1C274C"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M5.60423 5.60423L5.0739 5.0739V5.0739L5.60423 5.60423ZM4.33785 6.87061L3.58786 6.87438C3.58992 7.28564 3.92281 7.61853 4.33408 7.6206L4.33785 6.87061ZM6.87963 7.63339C7.29384 7.63547 7.63131 7.30138 7.63339 6.88717C7.63547 6.47296 7.30138 6.13549 6.88717 6.13341L6.87963 7.63339ZM5.07505 4.32129C5.07296 3.90708 4.7355 3.57298 4.32129 3.57506C3.90708 3.57715 3.57298 3.91462 3.57507 4.32882L5.07505 4.32129ZM3.75 12C3.75 11.5858 3.41421 11.25 3 11.25C2.58579 11.25 2.25 11.5858 2.25 12H3.75ZM16.8755 20.4452C17.2341 20.2378 17.3566 19.779 17.1492 19.4204C16.9418 19.0619 16.483 18.9393 16.1245 19.1468L16.8755 20.4452ZM19.1468 16.1245C18.9393 16.483 19.0619 16.9418 19.4204 17.1492C19.779 17.3566 20.2378 17.2341 20.4452 16.8755L19.1468 16.1245ZM5.14033 5.07126C4.84598 5.36269 4.84361 5.83756 5.13505 6.13191C5.42648 6.42626 5.90134 6.42862 6.19569 6.13719L5.14033 5.07126ZM18.8623 5.13786C15.0421 1.31766 8.86882 1.27898 5.0739 5.0739L6.13456 6.13456C9.33366 2.93545 14.5572 2.95404 17.8017 6.19852L18.8623 5.13786ZM5.0739 5.0739L3.80752 6.34028L4.86818 7.40094L6.13456 6.13456L5.0739 5.0739ZM4.33408 7.6206L6.87963 7.63339L6.88717 6.13341L4.34162 6.12062L4.33408 7.6206ZM5.08784 6.86684L5.07505 4.32129L3.57507 4.32882L3.58786 6.87438L5.08784 6.86684ZM12 3.75C16.5563 3.75 20.25 7.44365 20.25 12H21.75C21.75 6.61522 17.3848 2.25 12 2.25V3.75ZM12 20.25C7.44365 20.25 3.75 16.5563 3.75 12H2.25C2.25 17.3848 6.61522 21.75 12 21.75V20.25ZM16.1245 19.1468C14.9118 19.8483 13.5039 20.25 12 20.25V21.75C13.7747 21.75 15.4407 21.2752 16.8755 20.4452L16.1245 19.1468ZM20.25 12C20.25 13.5039 19.8483 14.9118 19.1468 16.1245L20.4452 16.8755C21.2752 15.4407 21.75 13.7747 21.75 12H20.25ZM6.19569 6.13719C7.68707 4.66059 9.73646 3.75 12 3.75V2.25C9.32542 2.25 6.90113 3.32791 5.14033 5.07126L6.19569 6.13719Z"
+          />
+        </svg>
+      </button>
+      <button
+        id="btn-usuarios"
+        class="btn-header oculto"
+        aria-label="Menu usuarios"
+        type="button"
+      >
+        <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+        <svg
+          width="800px"
+          height="800px"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+            stroke="#0d0d0d"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
+            stroke="#0d0d0d"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <button
+        id="btn-cerrar-sesion"
+        class="btn-header oculto"
+        aria-label="Cerrar sesión"
+        type="button"
+      >
+        <?xml version="1.0" encoding="utf-8"?>
+        <svg
+          fill="#000000"
+          width="800px"
+          height="800px"
+          viewBox="0 0 32 32"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3.651 16.989h17.326c0.553 0 1-0.448 1-1s-0.447-1-1-1h-17.264l3.617-3.617c0.391-0.39 0.391-1.024 0-1.414s-1.024-0.39-1.414 0l-5.907 6.062 5.907 6.063c0.196 0.195 0.451 0.293 0.707 0.293s0.511-0.098 0.707-0.293c0.391-0.39 0.391-1.023 0-1.414zM29.989 0h-17c-1.105 0-2 0.895-2 2v9h2.013v-7.78c0-0.668 0.542-1.21 1.21-1.21h14.523c0.669 0 1.21 0.542 1.21 1.21l0.032 25.572c0 0.668-0.541 1.21-1.21 1.21h-14.553c-0.668 0-1.21-0.542-1.21-1.21v-7.824l-2.013 0.003v9.030c0 1.105 0.895 2 2 2h16.999c1.105 0 2.001-0.895 2.001-2v-28c-0-1.105-0.896-2-2-2z"
+          ></path>
+        </svg>
+      </button>
+    </header>
+    <section class="modal oculto" id="modal-form-agregar-usuario">
+      <button class="btn-cerrar-form" id="btn-cerrar-login">X</button>
+      <div class="modal-content">
+        <div
+          class="pantalla-carga-form oculto"
+          id="pantalla-carga-form-usuarios"
+        >
+          <div class="icono-carga"></div>
+        </div>
+        <form id="form-usuarios" class="contenedor-login">
+          <h1
+            class="actualizar-datos-txt oculto"
+            id="actualizar-datos-usuario-txt"
+          >
+            Actualizar Datos
+          </h1>
+          <input
+            id="input-submit-name"
+            type="text"
+            placeholder="Nombre y apellido"
+          />
+          <input id="input-submit-user" type="text" placeholder="Usuario" />
+          <div class="password-container" id="contenedor-password-usuario">
+            <input
+              id="input-submit-password"
+              type="password"
+              placeholder="Contraseña"
+            />
+            <button
+              type="button"
+              id="btn-mostrar-password-add-user"
+              aria-label="Mostrar contraseña"
+            >
+              <div>
+                <?xml version="1.0" encoding="utf-8"?>
+                <svg
+                  width="800px"
+                  height="800px"
+                  viewBox="0 0 1024 1024"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="#000000"
+                    d="M512 160c320 0 512 352 512 352S832 864 512 864 0 512 0 512s192-352 512-352zm0 64c-225.28 0-384.128 208.064-436.8 288 52.608 79.872 211.456 288 436.8 288 225.28 0 384.128-208.064 436.8-288-52.608-79.872-211.456-288-436.8-288zm0 64a224 224 0 1 1 0 448 224 224 0 0 1 0-448zm0 64a160.192 160.192 0 0 0-160 160c0 88.192 71.744 160 160 160s160-71.808 160-160-71.744-160-160-160z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <?xml version="1.0" encoding="utf-8"?>
+                <svg
+                  width="800px"
+                  height="800px"
+                  viewBox="0 0 1024 1024"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M876.8 156.8c0-9.6-3.2-16-9.6-22.4-6.4-6.4-12.8-9.6-22.4-9.6-9.6 0-16 3.2-22.4 9.6L736 220.8c-64-32-137.6-51.2-224-60.8-160 16-288 73.6-377.6 176C44.8 438.4 0 496 0 512s48 73.6 134.4 176c22.4 25.6 44.8 48 73.6 67.2l-86.4 89.6c-6.4 6.4-9.6 12.8-9.6 22.4 0 9.6 3.2 16 9.6 22.4 6.4 6.4 12.8 9.6 22.4 9.6 9.6 0 16-3.2 22.4-9.6l704-710.4c3.2-6.4 6.4-12.8 6.4-22.4Zm-646.4 528c-76.8-70.4-128-128-153.6-172.8 28.8-48 80-105.6 153.6-172.8C304 272 400 230.4 512 224c64 3.2 124.8 19.2 176 44.8l-54.4 54.4C598.4 300.8 560 288 512 288c-64 0-115.2 22.4-160 64s-64 96-64 160c0 48 12.8 89.6 35.2 124.8L256 707.2c-9.6-6.4-19.2-16-25.6-22.4Zm140.8-96c-12.8-22.4-19.2-48-19.2-76.8 0-44.8 16-83.2 48-112 32-28.8 67.2-48 112-48 28.8 0 54.4 6.4 73.6 19.2L371.2 588.8ZM889.599 336c-12.8-16-28.8-28.8-41.6-41.6l-48 48c73.6 67.2 124.8 124.8 150.4 169.6-28.8 48-80 105.6-153.6 172.8-73.6 67.2-172.8 108.8-284.8 115.2-51.2-3.2-99.2-12.8-140.8-28.8l-48 48c57.6 22.4 118.4 38.4 188.8 44.8 160-16 288-73.6 377.6-176C979.199 585.6 1024 528 1024 512s-48.001-73.6-134.401-176Z"
+                    fill="#000000"
+                  />
+                  <path
+                    d="M511.998 672c-12.8 0-25.6-3.2-38.4-6.4l-51.2 51.2c28.8 12.8 57.6 19.2 89.6 19.2 64 0 115.2-22.4 160-64 41.6-41.6 64-96 64-160 0-32-6.4-64-19.2-89.6l-51.2 51.2c3.2 12.8 6.4 25.6 6.4 38.4 0 44.8-16 83.2-48 112-32 28.8-67.2 48-112 48Z"
+                    fill="#000000"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
+          <label id="contenedor-checkbox-admin" class="oculto">
+            Admin
+            <input type="checkbox" id="checkbox-admin" />
           </label>
-          <label for="apellido">
-            <p>Apellido</p>
-            <input type="text" id="apellido" required />
+          <input
+            class="btn-submit-user"
+            type="submit"
+            value="Agregar Usuario"
+            id="btn-submit-user"
+          />
+        </form>
+        <div class="checkbox-deshabilitado">
+          <label>
+            <button class="btn-limpiar-form" id="btn-limpiar-form-usuarios">
+              X
+            </button>
+            Limpiar
+          </label>
+          <label>
+            Deshabilitado
+            <input type="checkbox" id="check-deshabilitado-usuario" />
           </label>
         </div>
-        <label for="domicilio">
-          <p>Domicilio</p>
-          <input type="text" id="domicilio" required />
-        </label>
-        <label for="telefono">
-          <p>Teléfono</p>
+      </div>
+    </section>
+
+    <section class="modal oculto" id="modal-form-login">
+      <div class="modal-content">
+        <div class="pantalla-carga-form oculto" id="pantalla-carga-form-login">
+          <div class="icono-carga"></div>
+        </div>
+        <form id="login" class="contenedor-login">
+          <h1>Monitoreo Bingo</h1>
+          <img src="./public/favicon.png" alt="Logo Fundación SENO" />
+          <input id="user" placeholder="Usuario" required />
+          <div id="contenedor-input-password-login" class="password-container">
+            <input
+              id="pass"
+              type="password"
+              placeholder="Contraseña"
+              required
+            />
+            <button
+              type="button"
+              id="btn-mostrar-password"
+              aria-label="Mostrar contraseña"
+            >
+              <div>
+                <?xml version="1.0" encoding="utf-8"?>
+                <svg
+                  width="800px"
+                  height="800px"
+                  viewBox="0 0 1024 1024"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="#000000"
+                    d="M512 160c320 0 512 352 512 352S832 864 512 864 0 512 0 512s192-352 512-352zm0 64c-225.28 0-384.128 208.064-436.8 288 52.608 79.872 211.456 288 436.8 288 225.28 0 384.128-208.064 436.8-288-52.608-79.872-211.456-288-436.8-288zm0 64a224 224 0 1 1 0 448 224 224 0 0 1 0-448zm0 64a160.192 160.192 0 0 0-160 160c0 88.192 71.744 160 160 160s160-71.808 160-160-71.744-160-160-160z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <?xml version="1.0" encoding="utf-8"?>
+                <svg
+                  width="800px"
+                  height="800px"
+                  viewBox="0 0 1024 1024"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M876.8 156.8c0-9.6-3.2-16-9.6-22.4-6.4-6.4-12.8-9.6-22.4-9.6-9.6 0-16 3.2-22.4 9.6L736 220.8c-64-32-137.6-51.2-224-60.8-160 16-288 73.6-377.6 176C44.8 438.4 0 496 0 512s48 73.6 134.4 176c22.4 25.6 44.8 48 73.6 67.2l-86.4 89.6c-6.4 6.4-9.6 12.8-9.6 22.4 0 9.6 3.2 16 9.6 22.4 6.4 6.4 12.8 9.6 22.4 9.6 9.6 0 16-3.2 22.4-9.6l704-710.4c3.2-6.4 6.4-12.8 6.4-22.4Zm-646.4 528c-76.8-70.4-128-128-153.6-172.8 28.8-48 80-105.6 153.6-172.8C304 272 400 230.4 512 224c64 3.2 124.8 19.2 176 44.8l-54.4 54.4C598.4 300.8 560 288 512 288c-64 0-115.2 22.4-160 64s-64 96-64 160c0 48 12.8 89.6 35.2 124.8L256 707.2c-9.6-6.4-19.2-16-25.6-22.4Zm140.8-96c-12.8-22.4-19.2-48-19.2-76.8 0-44.8 16-83.2 48-112 32-28.8 67.2-48 112-48 28.8 0 54.4 6.4 73.6 19.2L371.2 588.8ZM889.599 336c-12.8-16-28.8-28.8-41.6-41.6l-48 48c73.6 67.2 124.8 124.8 150.4 169.6-28.8 48-80 105.6-153.6 172.8-73.6 67.2-172.8 108.8-284.8 115.2-51.2-3.2-99.2-12.8-140.8-28.8l-48 48c57.6 22.4 118.4 38.4 188.8 44.8 160-16 288-73.6 377.6-176C979.199 585.6 1024 528 1024 512s-48.001-73.6-134.401-176Z"
+                    fill="#000000"
+                  />
+                  <path
+                    d="M511.998 672c-12.8 0-25.6-3.2-38.4-6.4l-51.2 51.2c28.8 12.8 57.6 19.2 89.6 19.2 64 0 115.2-22.4 160-64 41.6-41.6 64-96 64-160 0-32-6.4-64-19.2-89.6l-51.2 51.2c3.2 12.8 6.4 25.6 6.4 38.4 0 44.8-16 83.2-48 112-32 28.8-67.2 48-112 48Z"
+                    fill="#000000"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
           <input
-            type="tel"
-            name="telefono"
-            id="telefono"
-            placeholder="2991234567"
-            required
+            type="submit"
+            id="btn-login"
+            value="Iniciar Sesión"
+            class="btn-login"
           />
+        </form>
+      </div>
+    </section>
+
+    <main class="contenedor-principal oculto" id="container-bingo">
+      <section class="contenedor-control">
+        <input
+          type="search"
+          id="buscador-bingo"
+          placeholder="Buscar..."
+          aria-label="Buscar participante"
+        />
+        <button id="btn-add" class="btn">Nuevo participante</button>
+        <label class="ocultar-cancelados">
+          Ocultar cancelados
+          <input type="checkbox" id="ocultar-cancelados" />
         </label>
-        <label for="barrio">
-          <p>Barrio</p>
-          <input type="text" id="barrio" required />
+      </section>
+      <div class="contenedor-tabla">
+        <table class="tabla skeleton-tabla" id="tabla-bingo">
+          <caption class="caption-tabla">
+            Listado de participantes (<span id="cant-num-bingo"></span
+            >)
+          </caption>
+          <thead>
+            <tr>
+              <th data-campo="numero_bingo" scope="col" id="numero-bingo">
+                Numero Bingo
+              </th>
+              <th data-campo="nombre" scope="col">Nombre</th>
+              <th data-campo="apellido" scope="col">Apellido</th>
+              <th data-campo="domicilio" scope="col">Domicilio</th>
+              <th data-campo="telefono" scope="col">Teléfono</th>
+              <th data-campo="barrio" scope="col">Barrio</th>
+              <th data-campo="lugar_de_cobro" scope="col">Lugar de Cobro</th>
+              <th data-campo="mes_inicio_str" scope="col">Mes Inicio</th>
+              <th data-campo="fecha_de_cobro" scope="col">Fecha de Cobro</th>
+              <th data-campo="localidad" scope="col">Localidad</th>
+              <th
+                data-campo="cuotas-pagas"
+                scope="col"
+                class="cabecera-cuotas-pagas"
+              >
+                Cuotas Pagas
+              </th>
+              <th data-campo="config_meses" scope="col">
+                Cada cuantos meses se avisa
+              </th>
+              <th data-campo="config_dia" scope="col">
+                Que dia del mes se avisa
+              </th>
+            </tr>
+          </thead>
+          <tbody id="tabla-body-bingo" class="tabla-body">
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td>
+                <div class="cuotas-skeleton-container">
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                </div>
+              </td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td>
+                <div class="cuotas-skeleton-container">
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                </div>
+              </td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td>
+                <div class="cuotas-skeleton-container">
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                </div>
+              </td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td>
+                <div class="cuotas-skeleton-container">
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                </div>
+              </td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td>
+                <div class="cuotas-skeleton-container">
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                </div>
+              </td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td>
+                <div class="cuotas-skeleton-container">
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                </div>
+              </td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td>
+                <div class="cuotas-skeleton-container">
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                </div>
+              </td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td>
+                <div class="cuotas-skeleton-container">
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                </div>
+              </td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td>
+                <div class="cuotas-skeleton-container">
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                  <div class="skeleton skeleton-badge"></div>
+                </div>
+              </td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <main class="contenedor-principal oculto" id="container-historial">
+      <section class="contenedor-control">
+        <input
+          type="search"
+          id="buscador-historial"
+          placeholder="Buscar..."
+          aria-label="Buscar cambio"
+        />
+      </section>
+      <div class="contenedor-tabla">
+        <table class="tabla skeleton-tabla no-filas-hover" id="tabla-historial">
+          <caption class="caption-tabla">
+            Historial de cambios (<span id="cant-num-historial"></span
+            >)
+          </caption>
+          <thead>
+            <tr>
+              <th data-campo="id" scope="col" id="id-historial-columna">ID</th>
+              <th data-campo="tabla_afectada" scope="col">Tabla afectada</th>
+              <th data-campo="registro_id" scope="col">ID del registro</th>
+              <th data-campo="accion" scope="col">Accion</th>
+              <th data-campo="datos_anteriores" scope="col">
+                Datos anteriores
+              </th>
+              <th data-campo="datos_nuevos" scope="col">Datos nuevos</th>
+              <th data-campo="nombre_usuario" scope="col">Nombre usuario</th>
+              <th data-campo="fecha" scope="col">Fecha</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-body-historial" class="tabla-body">
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <main class="contenedor-principal oculto" id="container-usuarios">
+      <section class="contenedor-control">
+        <input
+          type="search"
+          id="buscador-usuarios"
+          placeholder="Buscar..."
+          aria-label="Buscar participante"
+        />
+        <button id="btn-add-usuario" class="btn">Nuevo usuario</button>
+        <label class="ocultar-cancelados">
+          Ocultar deshabilitados
+          <input type="checkbox" id="ocultar-deshabilitados" />
         </label>
-        <label for="lugar-de-cobro">
-          <p>Lugar de Cobro</p>
-          <input type="text" id="lugar-de-cobro" required />
-        </label>
-        <label for="mes-inicio">
-          <p>Mes Inicio</p>
-          <input type="month" name="mes-inicio" id="mes-inicio" required />
-        </label>
-        <label for="fecha-de-cobro">
-          <p>Fecha de Cobro</p>
+      </section>
+      <div class="contenedor-tabla">
+        <table class="tabla skeleton-tabla" id="tabla-usuarios">
+          <caption class="caption-tabla">
+            Listado de usuarios (<span id="cant-num-usuarios"></span
+            >)
+          </caption>
+          <thead>
+            <tr>
+              <th data-campo="id" scope="col" id="id-usuario-columna">ID</th>
+              <th data-campo="nombre" scope="col">Nombre</th>
+              <th data-campo="username" scope="col">Nombre de usuario</th>
+              <th data-campo="admin" scope="col">¿Es administrador?</th>
+              <th data-campo="created_at" scope="col">Fecha de creación</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-body-usuarios" class="tabla-body">
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+            <tr class="skeleton-row">
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+              <td><div class="skeleton skeleton-text"></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <aside class="oculto" id="leyenda">
+      <table class="leyenda">
+        <tr>
+          <td>Futura cuota</td>
+          <td><div class="cuota-vacia"></div></td>
+        </tr>
+        <tr>
+          <td>Cuota no paga</td>
+          <td><div class="cuota-no-paga"></div></td>
+        </tr>
+        <tr>
+          <td>Cuota paga</td>
+          <td><div class="cuota-paga"></div></td>
+        </tr>
+      </table>
+    </aside>
+
+    <section class="modal oculto" id="modal-form-bingo">
+      <button class="btn-cerrar-form" id="btn-cerrar-form">X</button>
+      <div class="modal-content">
+        <div class="pantalla-carga-form oculto" id="pantalla-carga-form">
+          <div class="icono-carga"></div>
+        </div>
+        <form id="form-bingo" class="formulario">
+          <h1 class="actualizar-datos-txt oculto" id="actualizar-datos-txt">
+            Actualizar Datos
+          </h1>
+          <label for="numero-bingo">
+            <p>Numero Bingo</p>
+            <input type="number" id="numero-bingo-input" />
+          </label>
+          <div class="container-nombre-apellido">
+            <label for="nombre">
+              <p>Nombre</p>
+              <input type="text" id="nombre" />
+            </label>
+            <label for="apellido">
+              <p>Apellido</p>
+              <input type="text" id="apellido" />
+            </label>
+          </div>
+          <label for="domicilio">
+            <p>Domicilio</p>
+            <input type="text" id="domicilio" />
+          </label>
+          <label for="telefono">
+            <p>Teléfono</p>
+            <input
+              type="tel"
+              name="telefono"
+              id="telefono"
+              placeholder="2991234567"
+            />
+          </label>
+          <label for="barrio">
+            <p>Barrio</p>
+            <input type="text" id="barrio" />
+          </label>
+          <label for="lugar-de-cobro">
+            <p>Lugar de Cobro</p>
+            <input type="text" id="lugar-de-cobro" />
+          </label>
+          <label for="mes-inicio">
+            <p>Mes Inicio</p>
+            <input type="month" name="mes-inicio" id="mes-inicio" />
+          </label>
+          <label for="fecha-de-cobro">
+            <p>Fecha de Cobro</p>
+            <input type="text" name="fecha-de-cobro" id="fecha-de-cobro" />
+          </label>
+          <label for="localidad">
+            <p>Localidad</p>
+            <input type="text" name="localidad" id="localidad" />
+          </label>
+          <div class="cuotas">
+            <p>Cuotas pagas</p>
+            <label>
+              <input type="checkbox" class="check-cuotas" />
+              <p>1</p>
+              <select id="cuota-1">
+                <option value="0">MP</option>
+                <option value="1">Ef</option>
+              </select>
+            </label>
+            <label>
+              <input type="checkbox" class="check-cuotas" />
+              <p>2</p>
+              <select id="cuota-2">
+                <option value="0">MP</option>
+                <option value="1">Ef</option>
+              </select>
+            </label>
+            <label>
+              <input type="checkbox" class="check-cuotas" />
+              <p>3</p>
+              <select id="cuota-3">
+                <option value="0">MP</option>
+                <option value="1">Ef</option>
+              </select>
+            </label>
+            <label>
+              <input type="checkbox" class="check-cuotas" />
+              <p>4</p>
+              <select id="cuota-4">
+                <option value="0">MP</option>
+                <option value="1">Ef</option>
+              </select>
+            </label>
+            <label>
+              <input type="checkbox" class="check-cuotas" />
+              <p>5</p>
+              <select id="cuota-5">
+                <option value="0">MP</option>
+                <option value="1">Ef</option>
+              </select>
+            </label>
+            <label>
+              <input type="checkbox" class="check-cuotas" />
+              <p>6</p>
+              <select id="cuota-6">
+                <option value="0">MP</option>
+                <option value="1">Ef</option>
+              </select>
+            </label>
+            <label>
+              <input type="checkbox" class="check-cuotas" />
+              <p>7</p>
+              <select id="cuota-7">
+                <option value="0">MP</option>
+                <option value="1">Ef</option>
+              </select>
+            </label>
+            <label>
+              <input type="checkbox" class="check-cuotas" />
+              <p>8</p>
+              <select id="cuota-8">
+                <option value="0">MP</option>
+                <option value="1">Ef</option>
+              </select>
+            </label>
+          </div>
           <input
-            type="date"
-            name="fecha-de-cobro"
-            id="fecha-de-cobro"
-            required
+            type="submit"
+            value="Agregar Participante"
+            id="btn-submit-bingo"
+            class="btn-submit"
           />
-        </label>
-        <label for="localidad">
-          <p>Localidad</p>
-          <input type="text" name="localidad" id="localidad" required />
-        </label>
-        <label class="cuotas">
-          Cuotas pagas
-          <label><input type="checkbox" name="" class="check-cuotas" />1</label>
-          <label><input type="checkbox" name="" class="check-cuotas" />2</label>
-          <label><input type="checkbox" name="" class="check-cuotas" />3</label>
-          <label><input type="checkbox" name="" class="check-cuotas" />4</label>
-          <label><input type="checkbox" name="" class="check-cuotas" />5</label>
-          <label><input type="checkbox" name="" class="check-cuotas" />6</label>
-          <label><input type="checkbox" name="" class="check-cuotas" />7</label>
-          <label><input type="checkbox" name="" class="check-cuotas" />8</label>
-        </label>
-        <input type="submit" value="Enviar" class="btn-submit" />
-      </form>
-    </div>
+        </form>
+        <div class="checkbox-deshabilitado">
+          <label>
+            <button class="btn-limpiar-form" id="btn-limpiar-form">X</button>
+            Limpiar
+          </label>
+          <label>
+            Configurar avisos
+            <button
+              class="btn-configurar-avisos"
+              id="btn-configurar-avisos"
+            ></button>
+          </label>
+          <label>
+            Deshabilitado
+            <input type="checkbox" id="check-deshabilitado" />
+          </label>
+        </div>
+      </div>
+    </section>
+    <section class="modal oculto" id="modal-form-bingo-config-avisos">
+      <div class="modal-content">
+        <div class="modal-form-bingo-config-avisos formulario">
+          <h1>
+            Configuración de avisos <br />
+            en caso de adeudar cuota
+          </h1>
+          <div id="contenedor-select-config-avisos-mes">
+            Configuración mes:
+            <select id="select-config-avisos-mes">
+              <option value="0" selected>Todos los meses</option>
+              <option value="1">Personalizado</option>
+              <option value="2">Nunca</option>
+            </select>
+          </div>
+          <label
+            class="oculto"
+            id="contenedor-input-select-config-avisos-personalizado-x-meses"
+          >
+            Cada
+            <input
+              type="number"
+              id="input-select-config-avisos-personalizado-x-meses"
+              min="1"
+              max="12"
+              step="1"
+              value="1"
+            />
+            meses</label
+          >
+          <div id="contenedor-select-config-avisos-dia">
+            Configuración dia:
+            <select id="select-config-avisos-dia">
+              <option value="0" selected>1ro del mes</option>
+              <option value="1">Último día del mes</option>
+              <option value="2">Anteúltimo día del mes</option>
+              <option value="3">Penúltimo día del mes</option>
+              <option value="4">Personalizado</option>
+            </select>
+          </div>
+          <label
+            class="oculto"
+            id="contenedor-input-select-config-avisos-personalizado-dia"
+          >
+            Avisar los día
+            <input
+              type="number"
+              min="1"
+              max="30"
+              step="1"
+              value="1"
+              id="input-select-config-avisos-personalizado-dia"
+            />
+          </label>
+          <div>
+            <button id="btn-configurar-avisos-aceptar">Aceptar</button>
+            <button id="btn-configurar-avisos-cancelar">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="pantalla-error oculto" id="pantalla-error-permisos">
+      <p>NO TIENES PERMISOS</p>
+    </section>
+    <section class="pantalla-error oculto" id="pantalla-error-conexion">
+      <p>ERROR DE CONEXION</p>
+    </section>
+    <script type="module" src="/src/elements.ts"></script>
     <script type="module" src="/src/main.ts"></script>
-    <script type="module" src="/src/btnAdd.ts"></script>
-    <script type="module" src="/src/selectCuotas.ts"></script>
   </body>
 </html>

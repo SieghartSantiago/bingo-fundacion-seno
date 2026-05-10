@@ -8,6 +8,7 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.3.2",
     "jsonwebtoken": "^9.0.3",
+    "luxon": "^3.7.2",
     "pg": "^8.20.0",
     "socket.io": "^4.8.3",
     "zod": "^4.3.6"
@@ -17,6 +18,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/luxon": "^3.7.1",
     "@types/node": "^25.6.0",
     "@types/pg": "^8.20.0",
     "nodemon": "^3.1.14",

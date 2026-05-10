@@ -1,262 +1,344 @@
-import type { Bingo } from './Bingo.ts'
+import type { Bingo } from './types/Bingo.ts'
+import type { Historial } from './types/Historial.ts'
 
+import './common.css'
 import './style.css'
-import { io } from 'socket.io-client'
-import { esconderForm } from './btnAdd.ts'
-import { cantCuotasPagas } from './selectCuotas.ts'
-import { renderTabla, calcularDeuda } from './funcAux.ts'
+
+import {
+  renderTablaBingo,
+  eliminarFila,
+  renderTablaHistorial,
+  renderTablaUsuarios,
+  mostrarElemento,
+  checkErroresHTTP,
+} from './funcAux.ts'
+import { io, Socket } from 'socket.io-client'
+import { checkChecks, setSelectCuotas } from './selectCuotas.ts'
 import intlTelInput from 'intl-tel-input/intlTelInputWithUtils'
+import type { Iti } from 'intl-tel-input/intlTelInputWithUtils'
+import {
+  mostrarContenedorForm,
+  mostrarContenedorFormUsuario,
+  setIconoTh,
+} from './btn.ts'
 
-let token = localStorage.getItem('token')
-const inputAddName = document.getElementById(
-  'input-submit-name',
-) as HTMLInputElement
-const inputAddUser = document.getElementById(
-  'input-submit-user',
-) as HTMLInputElement
-const btnSubmitUser = document.getElementById(
-  'submit-user',
-) as HTMLButtonElement
-const inputAddPassword = document.getElementById(
-  'input-submit-password',
-) as HTMLInputElement
-const form = document.getElementById('form') as HTMLFormElement
-const appDiv = document.getElementById('app') as HTMLDivElement
-const loginForm = document.getElementById('login') as HTMLFormElement
-const input = document.getElementById('telefono') as HTMLInputElement
-const buscador = document.getElementById('buscador') as HTMLInputElement
-const inputUsername = document.getElementById('user') as HTMLInputElement
-const inputPassword = document.getElementById('pass') as HTMLInputElement
-const btnLogin = document.getElementById('btn-login') as HTMLInputElement
-const btnAddUser = document.getElementById('btn-add-user') as HTMLButtonElement
-const contenedorLeyenda = document.getElementById('leyenda') as HTMLTableElement
+import * as elementosHtml from './elements.ts'
+import type { Login } from './types/Login.ts'
 
-let asc = true
-let timeout: any
-let datos: Bingo[] = []
+const STR_CURSOR_CARGANDO = 'cursor-cargando'
 
-btnSubmitUser.addEventListener('click', async (e) => {
-  e.preventDefault()
+export let token: string | null = localStorage.getItem('token')
 
-  const name = inputAddName.value
-  const username = inputAddUser.value
-  const password = inputAddPassword.value
+export function setToken(val: string | null): void {
+  token = val
+}
 
-  const res = await fetch('https://backend-production-ecc8.up.railway.app/auth/create-user', {
-    method: 'POST',
+export let id: number | null = Number(localStorage.getItem('id'))
+
+export function setId(val: number | null): void {
+  id = val
+}
+
+export const iti: Iti = intlTelInput(elementosHtml.telefonoInput, {
+  initialCountry: 'ar',
+  preferredCountries: ['ar', 'cl', 'us'],
+  utilsScript: import.meta.env.VITE_CDN_UTILS,
+} as any)
+
+export let pantallaActual: HTMLDivElement = elementosHtml.contenedorBingo
+export let pantallaActualNum: number
+
+export let cargandoDatos: boolean = false
+
+export let datosBingo: Bingo[] = []
+
+export function setDatosBingo(val: Bingo[]): void {
+  datosBingo = val
+}
+
+export let datosHistorial: Historial[] = []
+
+export function setDatosHistorial(val: Historial[]): void {
+  datosHistorial = val
+}
+
+export let datosUsuarios: Login[] = []
+
+export function setDatosUsuarios(val: Login[]): void {
+  datosUsuarios = val
+}
+
+export let cambiandoConfigAvisos: boolean = false
+
+export function setCambiandoConfigAvisos(val: boolean) {
+  cambiandoConfigAvisos = val
+}
+
+export const arrConfigAvisos: number[] = [0, 0]
+
+let numPantallaActual: number = parseInt(localStorage.getItem('pantalla')!) || 0
+export let numeroBingoCambiando: number | null = null
+export let idUsuarioCambiando: number | null = null
+export const API: string = import.meta.env.VITE_API_URL
+
+const socket: Socket = io(API)
+
+socket.on('actualizar-tabla', (): void => {
+  elementosHtml.cargaDiscreta.classList.add('aviso-transform')
+  cargarDatos()
+})
+
+socket.on('actualizar-perfil', (): void => {
+  window.location.href = window.location.href
+})
+
+export function mostrarApp(): void {
+  elementosHtml.avisoBorrado.classList.add('aviso-transition')
+  elementosHtml.cargaDiscreta.classList.add('aviso-transition')
+  elementosHtml.avisoNingunCambio.classList.add('aviso-transition')
+  elementosHtml.avisoCambiosExito.classList.add('aviso-transition')
+  elementosHtml.avisoBorradoUsuario.classList.add('aviso-transition')
+  mostrarElemento(elementosHtml.avisoBorrado)
+  mostrarElemento(elementosHtml.btnCerrarSesion)
+  mostrarElemento(elementosHtml.contenedorHeader)
+  mostrarElemento(elementosHtml.avisoBorradoUsuario)
+  mostrarElemento(elementosHtml.modalFormLogin, false)
+
+  if (localStorage.getItem('admin')) {
+    elementosHtml.arrBtnHeader.push(elementosHtml.btnUsuarios)
+    elementosHtml.arrPantallas.push(elementosHtml.contenedorUsuarios)
+  }
+
+  cambioPantalla(numPantallaActual)
+
+  cargarDatos()
+}
+
+async function cargarDatos(): Promise<void> {
+  cargandoDatos = true
+  elementosHtml.arrModals.forEach((modal): void =>
+    mostrarElemento(modal, false),
+  )
+
+  setElementosCursorCargando(true)
+
+  const resBingo: Response = await fetch(`${API}/bingo`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ name, username, password }),
   })
 
-  const data = await res.json()
-
-  if (data.ok) {
-    alert('Usuario añadido con éxito')
-  } else {
-    alert(data.error)
-  }
-})
-
-if (token) {
-  mostrarApp()
-}
-
-btnLogin.addEventListener('click', async (e) => {
-  if (!loginForm.checkValidity()) {
-    e.preventDefault()
-    loginForm.reportValidity()
-    return
-  }
-  e.preventDefault()
-  const username = inputUsername.value
-  const password = inputPassword.value
-
-  if (!username || !password) return
-
-  const res = await fetch('https://backend-production-ecc8.up.railway.app/auth/login', {
-    method: 'POST',
+  const resHistorial: Response = await fetch(`${API}/historial`, {
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ username, password }),
   })
 
-  const data = await res.json()
+  if (checkErroresHTTP(resBingo)) return
+  if (checkErroresHTTP(resHistorial)) return
 
-  if (data.token) {
-    localStorage.clear()
-    localStorage.setItem('token', data.token)
-    token = data.token
-    mostrarApp()
+  setDatosBingo(await resBingo.json())
 
-    if (data.admin) {
-      btnAddUser.classList.remove('oculto')
-      localStorage.setItem('admin', data.admin)
-    }
-  } else {
-    alert(data.error)
+  datosBingo.forEach((fila): void => {
+    fila.mes_inicio = new Date(fila.mes_inicio)
+    fila.mes_inicio_str = `${fila.mes_inicio.getFullYear()}-${String(fila.mes_inicio.getMonth() + 1).padStart(2, '0')}`
+  })
+
+  if (numeroBingoCambiando) {
+    eliminarFila(numeroBingoCambiando)
+    numeroBingoCambiando = null
   }
-})
 
-function mostrarApp() {
-  loginForm.style.display = 'none'
-  appDiv.classList.remove('oculto')
-  contenedorLeyenda.classList.remove('oculto')
+  renderTablaBingo(datosBingo)
 
-  cargarDatos()
-}
+  setDatosHistorial(await resHistorial.json())
 
-async function cargarDatos() {
-  const res = await fetch('https://backend-production-ecc8.up.railway.app/bingo')
-  datos = await res.json()
+  renderTablaHistorial(datosHistorial)
 
   if (localStorage.getItem('admin')) {
-    btnAddUser.classList.remove('oculto')
+    const resUsuarios: Response = await fetch(`${API}/login`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (checkErroresHTTP(resUsuarios)) return
+
+    setDatosUsuarios(await resUsuarios.json())
+
+    renderTablaUsuarios(datosUsuarios)
   }
 
-  renderTabla(datos)
+  elementosHtml.cargaDiscreta.classList.remove('aviso-transform')
+
+  setElementosCursorCargando(false)
+  cargandoDatos = false
 }
 
-const iti = intlTelInput(input, {
-  initialCountry: 'ar',
-  preferredCountries: ['ar', 'cl', 'us'],
-  utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input/build/js/utils.js',
-} as any)
+export function editarFila(numBingo: number): void {
+  if (cargandoDatos) return
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault()
-
-  const numeroBingo = parseInt(
-    (document.querySelector('#numero-bingo') as HTMLInputElement).value,
+  const fila: Bingo | undefined = datosBingo.find(
+    (f): boolean => f.numero_bingo === numBingo,
   )
-  const nombre = (document.querySelector('#nombre') as HTMLInputElement).value
-  const apellido = (document.querySelector('#apellido') as HTMLInputElement)
-    .value
-  const domicilio = (document.querySelector('#domicilio') as HTMLInputElement)
-    .value
-  await iti.promise
-  if (!iti.isValidNumber()) {
-    alert('Número inválido')
+
+  if (!fila) return
+
+  mostrarElemento(elementosHtml.actualizarDatosTxt)
+  elementosHtml.btnSubmitBingo.value = 'Editar Participante'
+
+  elementosHtml.numeroBingoInput.value = `${numBingo}`
+  elementosHtml.nombreInput.value = fila.nombre
+  elementosHtml.apellidoInput.value = fila.apellido
+  elementosHtml.domicilioInput.value = fila.domicilio
+  iti.setNumber(fila.telefono)
+  elementosHtml.barrioInput.value = fila.barrio
+  elementosHtml.lugarDeCobroInput.value = fila.lugar_cobro
+  elementosHtml.mesInicioInput.value = fila.mes_inicio_str
+
+  elementosHtml.fechaDeCobroInput.value = fila.fecha_cobro
+
+  elementosHtml.localidadInput.value = fila.localidad
+
+  elementosHtml.checkDeshabilitado.checked = fila.deshabilitado
+
+  arrConfigAvisos[0] = fila.configAvisos[0]
+  arrConfigAvisos[1] = fila.configAvisos[1]
+
+  checkChecks(fila.cuotas.length - 1, true, true)
+  setSelectCuotas(fila.cuotas.map((e): number => e.medio_pago))
+
+  numeroBingoCambiando = numBingo
+
+  mostrarContenedorForm(true)
+}
+
+export function editarFilaUsuario(idUsuario: number): void {
+  if (cargandoDatos) return
+
+  const fila: Login | undefined = datosUsuarios.find(
+    (f): boolean => f.id === idUsuario,
+  )
+
+  if (!fila) return
+
+  elementosHtml.inputAddName.value = fila.nombre
+  elementosHtml.inputAddUser.value = fila.username
+  elementosHtml.inputAdmin.checked = fila.admin
+  elementosHtml.checkDeshabilitadoUsuario.checked = !fila.habilitado
+
+  idUsuarioCambiando = idUsuario
+
+  elementosHtml.inputAdmin.disabled = idUsuarioCambiando === id
+  elementosHtml.checkDeshabilitadoUsuario.disabled = idUsuarioCambiando === id
+
+  mostrarElemento(elementosHtml.pantallaCargaFormUsuarios, false)
+  mostrarContenedorFormUsuario(true)
+}
+
+export function nullCambioDatos(): void {
+  numeroBingoCambiando = null
+}
+
+export function vaciarInputsForm(): void {
+  elementosHtml.numeroBingoInput.value = ''
+  elementosHtml.nombreInput.value = ''
+  elementosHtml.apellidoInput.value = ''
+  elementosHtml.domicilioInput.value = ''
+  iti.setNumber('')
+  iti.setCountry('ar')
+  elementosHtml.barrioInput.value = ''
+  elementosHtml.lugarDeCobroInput.value = ''
+  elementosHtml.mesInicioInput.value = ''
+  elementosHtml.fechaDeCobroInput.value = ''
+  elementosHtml.localidadInput.value = ''
+  elementosHtml.checkDeshabilitado.checked = false
+  checkChecks(0, false, true)
+  arrConfigAvisos[0] = 1
+  arrConfigAvisos[1] = 1
+}
+
+export function vaciarInputsFormUsuario(): void {
+  elementosHtml.inputAddName.value = ''
+  elementosHtml.inputAddPassword.value = ''
+  elementosHtml.inputAddUser.value = ''
+  elementosHtml.checkDeshabilitadoUsuario.checked = false
+}
+
+export function cambioPantalla(num: number): void {
+  for (let i: number = 0; i < elementosHtml.arrPantallas.length; i++) {
+    if (i === num) {
+      pantallaActual = elementosHtml.arrPantallas[i]
+      mostrarElemento(pantallaActual)
+      mostrarElemento(elementosHtml.arrBtnHeader[i], false)
+      setIconoTh(i)
+      localStorage.setItem('pantalla', String(i))
+    } else {
+      mostrarElemento(elementosHtml.arrPantallas[i], false)
+      mostrarElemento(elementosHtml.arrBtnHeader[i])
+    }
+  }
+
+  if (num === 0) {
+    mostrarElemento(elementosHtml.contenedorLeyenda)
+  } else {
+    mostrarElemento(elementosHtml.contenedorLeyenda, false)
+  }
+
+  pantallaActualNum = num
+}
+
+function setElementosCursorCargando(val: boolean): void {
+  setCursorCargando(elementosHtml.btnAdd, val)
+  setCursorCargando(elementosHtml.btnAddUsuario, val)
+  setCursorCargando(elementosHtml.contenedorUsuarios, val)
+  setCursorCargando(elementosHtml.contenedorBingo, val)
+  Array(
+    ...(document.getElementsByClassName(
+      'fila-bingo',
+    ) as HTMLCollectionOf<HTMLElement>),
+  ).forEach((fila): void => setCursorCargando(fila, val))
+  Array(
+    ...(document.getElementsByClassName(
+      'fila-usuarios',
+    ) as HTMLCollectionOf<HTMLElement>),
+  ).forEach((fila): void => setCursorCargando(fila, val))
+}
+
+function setCursorCargando(element: HTMLElement, val: boolean): void {
+  if (!val) {
+    if (element.classList.contains(STR_CURSOR_CARGANDO)) {
+      element.classList.remove(STR_CURSOR_CARGANDO)
+    }
     return
   }
-  let telefono = iti.getNumber()
-  const country = iti.getSelectedCountryData()?.iso2
-  if (country === 'ar' && !telefono.startsWith('+549')) {
-    telefono = telefono.replace('+54', '+549')
-  }
-  const barrio = (document.querySelector('#barrio') as HTMLInputElement).value
-  const lugarDeCobro = (
-    document.querySelector('#lugar-de-cobro') as HTMLInputElement
-  ).value
-  const mesInicio = (document.querySelector('#mes-inicio') as HTMLInputElement)
-    .value
-  const fechaDeCobro = (
-    document.querySelector('#fecha-de-cobro') as HTMLInputElement
-  ).value
-  const localidad = (document.querySelector('#localidad') as HTMLInputElement)
-    .value
-  const cuotasPagas = cantCuotasPagas()
 
-  const res = await fetch('https://backend-production-ecc8.up.railway.app/bingo', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      numeroBingo,
-      nombre,
-      apellido,
-      domicilio,
-      telefono,
-      barrio,
-      lugarDeCobro,
-      mesInicio,
-      fechaDeCobro,
-      localidad,
-      cuotasPagas,
-    }),
-  })
+  if (!element.classList.contains(STR_CURSOR_CARGANDO))
+    element.classList.add(STR_CURSOR_CARGANDO)
+}
 
-  const result = await res.json()
-
-  if (result.ok) esconderForm()
-
-  if (result.error.code === '23505') alert('Numero bingo ya ingresado')
-})
-
-document.querySelectorAll('th').forEach((th) => {
-  th.addEventListener('click', () => {
-    const campo = th.getAttribute('data-campo')
-
-    if (campo === 'cuotas-pagas') {
-      datos.sort((a, b) => {
-        const deudaA = calcularDeuda(a)
-        const deudaB = calcularDeuda(b)
-
-        return asc ? deudaB - deudaA : deudaA - deudaB
-      })
-
-      asc = !asc
-      renderTabla(datos)
-      return
-    }
-
-    const campoId = th.getAttribute('data-campo') as keyof Bingo
-
-    if (!campoId) return
-
-    datos.sort((a, b) => {
-      const valA = a[campoId]
-      const valB = b[campoId]
-
-      // números
-      if (typeof valA === 'number' && typeof valB === 'number') {
-        return asc ? valA - valB : valB - valA
-      }
-
-      // fechas
-      if (campoId.includes('fecha') || campoId.includes('mes')) {
-        return asc
-          ? new Date(valA as string).getTime() -
-              new Date(valB as string).getTime()
-          : new Date(valB as string).getTime() -
-              new Date(valA as string).getTime()
-      }
-
-      // strings
-      return asc
-        ? String(valA).localeCompare(String(valB))
-        : String(valB).localeCompare(String(valA))
-    })
-
-    asc = !asc
-
-    renderTabla(datos)
-  })
-})
-
-buscador.addEventListener('input', () => {
-  clearTimeout(timeout)
-  timeout = setTimeout(() => {
-    const texto = buscador.value.toLowerCase()
-
-    const filtrados = datos.filter((item) =>
-      Object.values(item).some((valor) =>
-        String(valor).toLowerCase().includes(texto),
-      ),
+document.addEventListener('keydown', (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    if (cambiandoConfigAvisos) return
+    elementosHtml.arrModals.forEach((modal): void =>
+      mostrarElemento(modal, false),
     )
-
-    renderTabla(filtrados)
-  }, 300)
+  }
 })
 
-const socket = io('https://backend-production-ecc8.up.railway.app')
-
-socket.on('actualizar-tabla', () => {
-  console.log('Actualizar datos')
-
-  cargarDatos()
+window.addEventListener('load', (): void => {
+  mostrarElemento(elementosHtml.modalFormLogin)
+  elementosHtml.avisoError.classList.add('aviso-transition')
+  mostrarElemento(elementosHtml.contenedorAvisos)
+  if (token) {
+    mostrarApp()
+  }
+  elementosHtml.pantallaCarga.classList.add('ocultandose')
+  setTimeout((): void => {
+    mostrarElemento(elementosHtml.pantallaCarga, false)
+    document.body.style.overflow = 'auto'
+    document.body.style.height = ''
+  }, 1000)
 })
