@@ -838,7 +838,7 @@ a {
 .checkbox-deshabilitado label {
   color: var(--color-blanco);
   font-weight: bold;
-  width: var(100% / 3);
+  width: calc(100% / 3);
   height: 1rem;
   display: flex;
   justify-content: center;
