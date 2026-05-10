@@ -81,6 +81,8 @@ export let numeroBingoCambiando: number | null = null
 export let idUsuarioCambiando: number | null = null
 export const API: string = import.meta.env.VITE_API_URL
 
+console.log(API)
+
 const socket: Socket = io(API)
 
 socket.on('actualizar-tabla', (): void => {
