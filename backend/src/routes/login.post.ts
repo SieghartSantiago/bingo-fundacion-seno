@@ -23,6 +23,8 @@ router.post('/login', async (req: Request, res: Response) => {
 
   const { username, password } = req.body
 
+  console.log(password)
+
   const result = await pool.query('SELECT * FROM login WHERE username = $1', [
     username.trim(),
   ])
