@@ -136,6 +136,9 @@ async function cargarDatos(): Promise<void> {
     },
   })
 
+  console.log(resBingo)
+  console.log(resHistorial)
+
   if (checkErroresHTTP(resBingo)) return
   if (checkErroresHTTP(resHistorial)) return
 
