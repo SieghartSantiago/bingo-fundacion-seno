@@ -81,13 +81,13 @@ function strConfigAviso(esMes: boolean, num: number): string {
 
   switch (num) {
     case 31:
-      return 'Ultimo dia del mes'
+      return 'Último día del mes'
     case 32:
-      return 'Anteultimo dia del mes'
+      return 'Anteúltimo día del mes'
     case 33:
-      return 'Penultimo dia del mes'
+      return 'Penúltimo día del mes'
     default:
-      return `Dia numero ${num} del mes`
+      return `Día número ${num} del mes`
   }
 }
 

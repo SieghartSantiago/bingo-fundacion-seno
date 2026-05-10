@@ -947,4 +947,8 @@ a {
   .checkbox-deshabilitado {
     bottom: -3rem;
   }
+
+  .cuota-paga {
+    font-size: .7rem;
+  }
 }
