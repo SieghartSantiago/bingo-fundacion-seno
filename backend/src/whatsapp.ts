@@ -16,10 +16,42 @@ export async function enviarMensajeWhatsApp(): Promise<void> {
           to: '542995468452', // número destino
           type: 'template',
           template: {
-            name: 'hello_world',
+            name: 'aviso_pago_cuota',
             language: {
-              code: 'en_US',
+              code: 'es_ARG',
             },
+            components: [
+              {
+                type: 'header',
+                parameters: [
+                  {
+                    type: 'text',
+                    text: '1023',
+                  },
+                ],
+              },
+              {
+                type: 'body',
+                parameters: [
+                  {
+                    type: 'text',
+                    text: 'Santiago',
+                  },
+                  {
+                    type: 'text',
+                    text: 's',
+                  },
+                  {
+                    type: 'text',
+                    text: 's',
+                  },
+                  {
+                    type: 'text',
+                    text: '1023',
+                  },
+                ],
+              },
+            ],
           },
         }),
       },
