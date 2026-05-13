@@ -18,7 +18,7 @@ export async function enviarMensajeWhatsApp(): Promise<void> {
           template: {
             name: 'aviso_pago_cuota',
             language: {
-              code: 'es_ARG',
+              code: 'es_AR',
             },
             components: [
               {
