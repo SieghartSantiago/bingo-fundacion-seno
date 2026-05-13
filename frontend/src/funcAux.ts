@@ -32,8 +32,6 @@ function renderTablaBingo(data: Bingo[], orden: boolean = false): void {
 
   if (!orden) elementosHtml.numeroBingoColumna.classList.add('desc')
 
-  console.log(data)
-
   data.forEach((item) => {
     if (tablaVaciaBingo) {
       tablaVaciaBingo = false
@@ -220,9 +218,6 @@ function renderTablaUsuarios(data: Login[], orden: boolean = false): void {
       tr.classList.add('fila-deshabilitada')
     }
 
-    console.log(item.id)
-    console.log(id)
-
     if (item.id === id) {
       tr.classList.add('fila-usuario-propio')
     }
@@ -288,7 +283,6 @@ function checkErroresHTTP(resp: Response): boolean {
 
 function mostrarContenedorFormConfigAvisos(): void {
   setCambiandoConfigAvisos(true)
-  console.log(arrConfigAvisos)
 
   if (numeroBingoCambiando) {
     switch (arrConfigAvisos[0]) {

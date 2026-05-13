@@ -85,8 +85,6 @@ export function setIdUsuarioCambiando(val : number | null) {
 
 export const API: string = import.meta.env.VITE_API_URL
 
-console.log(API)
-
 export function mostrarApp(): void {
   elementosHtml.avisoBorrado.classList.add('aviso-transition')
   elementosHtml.cargaDiscreta.classList.add('aviso-transition')
@@ -122,9 +120,6 @@ export function mostrarApp(): void {
 
 async function cargarDatos(): Promise<void> {
   cargandoDatos = true
-  elementosHtml.arrModals.forEach((modal): void =>
-    mostrarElemento(modal, false),
-  )
 
   setElementosCursorCargando(true)
 
@@ -141,9 +136,6 @@ async function cargarDatos(): Promise<void> {
       Authorization: `Bearer ${token}`,
     },
   })
-
-  console.log(resBingo)
-  console.log(resHistorial)
 
   if (checkErroresHTTP(resBingo)) return
   if (checkErroresHTTP(resHistorial)) return

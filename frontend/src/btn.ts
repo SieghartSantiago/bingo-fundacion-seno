@@ -328,7 +328,6 @@ elementosHtml.formUsuarios.addEventListener(
         mostrarAvisoError('No se puede eliminar su propia cuenta')
         return
       }
-      console.log('hola')
       usuarioBorrandose = true
       elementosHtml.indicadorUsuarioBorrandose.innerText =
         String(idUsuarioCambiando)
@@ -346,7 +345,6 @@ elementosHtml.formUsuarios.addEventListener(
     }
 
     if (!idUsuarioCambiando) {
-      console.log('creando')
       const password: string = elementosHtml.inputAddPassword.value
 
       const res: Response = await fetch(`${API}/login/crear`, {
@@ -371,7 +369,6 @@ elementosHtml.formUsuarios.addEventListener(
     } else {
       const admin: boolean = elementosHtml.inputAdmin.checked
 
-      console.log('cambiando')
       const res: Response = await fetch(`${API}/login/cambio`, {
         method: 'POST',
         headers: {
@@ -470,8 +467,6 @@ elementosHtml.formBingo.addEventListener('submit', async (e): Promise<void> => {
   for (let i: number = 0; i < cuotasPagas; i++) {
     arrOptionsCuotas.push(elementosHtml.arrSelectCuotas[i].selectedIndex)
   }
-
-  console.log(arrOptionsCuotas)
 
   let res: Response
 

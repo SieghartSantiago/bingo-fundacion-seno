@@ -11,6 +11,7 @@ import bingoGetRoutes from './routes/bingo.get'
 import historialRoutes from './routes/historial'
 import bingoPostRoutes from './routes/bingo.post'
 import bingoDeleteRoutes from './routes/bingo.delete'
+import { enviarMensajeWhatsApp } from './whatsapp'
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min
@@ -52,3 +53,5 @@ server.listen(PORT, () => {
   console.log('Servidor corriendo en puerto', PORT)
   process.env.BACKEND_PORT = String(PORT)
 })
+
+enviarMensajeWhatsApp()
