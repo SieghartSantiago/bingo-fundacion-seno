@@ -13,7 +13,7 @@ export async function enviarMensajeWhatsApp(): Promise<void> {
         },
         body: JSON.stringify({
           messaging_product: 'whatsapp',
-          to: '5492995468452', // número destino
+          to: '542995468452', // número destino
           type: 'template',
           template: {
             name: 'hello_world',
