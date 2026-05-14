@@ -57,7 +57,7 @@ server.listen(PORT, () => {
   process.env.BACKEND_PORT = String(PORT)
 })
 
-cron.schedule('37 10 * * *', async (): Promise<void> => {
+cron.schedule('43 10 * * *', async (): Promise<void> => {
   console.log('schedule')
   const respFilas = await pool.query(`
     SELECT 
@@ -143,6 +143,8 @@ cron.schedule('37 10 * * *', async (): Promise<void> => {
     }
   }
 })
+
+console.log(cors)
 
 function mesesTranscurridos(inicio: Date): number {
   const hoy = new Date()
