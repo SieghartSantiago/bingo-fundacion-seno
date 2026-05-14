@@ -5,7 +5,7 @@ const phoneNumberId: string = '1184914281360815'
 
 const router = Router()
 
-export async function enviarMensajeWhatsApp(): Promise<void> {
+export async function enviarMensajeWhatsApp(telefono: string, nombre: string, cuotasPlural: boolean): Promise<void> {
   try {
     const response: Response = await fetch(
       `https://graph.facebook.com/v25.0/${phoneNumberId}/messages`,
