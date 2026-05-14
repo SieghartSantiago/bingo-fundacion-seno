@@ -58,6 +58,7 @@ server.listen(PORT, () => {
 })
 
 cron.schedule('30 10 * * *', async (): Promise<void> => {
+  console.log('schedule')
   const respFilas = await pool.query(`
     SELECT 
       b.*,
