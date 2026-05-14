@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 const accessToken: string | undefined = process.env.META_ACCESS_TOKEN
-const phoneNumberId: string = '1184914281360815'
+const phoneNumberId: string | undefined = process.env.META_TELEFONO_ID
 
 const router = Router()
 
@@ -20,7 +20,7 @@ export async function enviarMensajeWhatsApp(numBingo: string, telefono: string, 
           to: telefono.slice(1), // número destino
           type: 'template',
           template: {
-            name: 'aviso_pago_cuota',
+            name: 'aviso_bingo_adeuda_cuota',
             language: {
               code: 'es_AR',
             },
