@@ -57,7 +57,7 @@ server.listen(PORT, () => {
   process.env.BACKEND_PORT = String(PORT)
 })
 
-cron.schedule('48 10 * * *', async (): Promise<void> => {
+cron.schedule('54 10 * * *', async (): Promise<void> => {
   console.log('schedule')
   const respFilas = await pool.query(`
     SELECT 
@@ -144,7 +144,7 @@ cron.schedule('48 10 * * *', async (): Promise<void> => {
   }
 })
 
-console.log('cors:')
+console.log('cors::::::::::::::::::::::::::::::::::::::::')
 console.log(cors.toString())
 console.log('fin cors')
 
