@@ -88,7 +88,10 @@ async function verDeAvisar(): Promise<void> {
 
   console.log('filas||||||||||||||||||||||||||||||||||||||||||||')
 
-  filas.forEach(e => console.log(e))
+  filas.forEach((e, index) => {
+    console.log(`index: ${index} =========================================`)
+    console.log(e)
+  })
 
   const hoy = new Date()
   const maniana = new Date(hoy)
