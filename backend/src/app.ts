@@ -101,17 +101,17 @@ async function verDeAvisar(): Promise<void> {
 
     console.log('adeuda cuotas')
     console.log(cuotasAdeudadas)
-    console.log(bingo.config_meses)
+    console.log(bingo.configAvisos[0])
 
     if (
-      cuotasAdeudadas / bingo.config_meses !==
-      Math.floor(cuotasAdeudadas / bingo.config_meses)
+      cuotasAdeudadas / bingo.configAvisos[0] !==
+      Math.floor(cuotasAdeudadas / bingo.configAvisos[0])
     )
       continue
 
     console.log('paso el condicional este raro')
 
-    switch (bingo.config_dia) {
+    switch (bingo.configAvisos[1]) {
       case 0:
         continue
 
