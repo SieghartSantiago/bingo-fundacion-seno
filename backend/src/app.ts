@@ -57,11 +57,13 @@ server.listen(PORT, () => {
   process.env.BACKEND_PORT = String(PORT)
 })
 
-cron.schedule(
-  '4 11 * * *',
-  async (): Promise<void> => {
-    console.log('schedule')
-    const respFilas = await pool.query(`
+// cron.schedule('4 11 * * *', verDeAvisar, {
+//   timezone: 'America/Argentina/Buenos_Aires',
+// })
+
+async function verDeAvisar(): Promise<void> {
+  console.log('schedule')
+  const respFilas = await pool.query(`
     SELECT 
       b.*,
       json_agg(c ORDER BY c.num_cuota)
@@ -82,87 +84,87 @@ cron.schedule(
       GROUP BY b.id
       ORDER BY b.numero_bingo;`)
 
-    const filas = respFilas.rows
+  const filas = respFilas.rows
 
-    console.log('filas||||||||||||||||||||||||||||||||||||||||||||')
-    console.log(filas)
+  console.log('filas||||||||||||||||||||||||||||||||||||||||||||')
+  console.log(filas)
 
-    const hoy = new Date()
-    const maniana = new Date(hoy)
+  const hoy = new Date()
+  const maniana = new Date(hoy)
 
-    for (const bingo of filas) {
-      console.log('bingo||||||||||||||||||||||||||||||||||||||||||||')
-      console.log(bingo)
-      const cuotasAdeudadas: number =
-        mesesTranscurridos(bingo.mes_inicio) - bingo.cuotas.length
-      if (cuotasAdeudadas <= 0) continue
+  for (const bingo of filas) {
+    console.log('bingo||||||||||||||||||||||||||||||||||||||||||||')
+    console.log(bingo)
+    const cuotasAdeudadas: number =
+      mesesTranscurridos(bingo.mes_inicio) - bingo.cuotas.length
+    if (cuotasAdeudadas <= 0) continue
 
-      console.log('adeuda cuotas')
+    console.log('adeuda cuotas')
+    console.log(cuotasAdeudadas)
+    console.log(bingo.config_meses)
 
-      if (
-        cuotasAdeudadas / bingo.config_meses !==
-        Math.floor(cuotasAdeudadas / bingo.config_meses)
-      )
+    if (
+      cuotasAdeudadas / bingo.config_meses !==
+      Math.floor(cuotasAdeudadas / bingo.config_meses)
+    )
+      continue
+
+    console.log('paso el condicional este raro')
+
+    switch (bingo.config_dia) {
+      case 0:
         continue
 
-      console.log('paso el condicional este raro')
-
-      switch (bingo.config_dia) {
-        case 0:
-          continue
-
-        case 31:
-          maniana.setDate(hoy.getDate() + 1)
-          if (hoy.getMonth() !== maniana.getMonth())
-            enviarMensajeWhatsApp(
-              String(bingo.numero_bingo),
-              bingo.telefono,
-              bingo.nombre,
-              cuotasAdeudadas > 1,
-            )
-          continue
-
-        case 32:
-          maniana.setDate(hoy.getDate() + 2)
-          if (hoy.getMonth() !== maniana.getMonth())
-            enviarMensajeWhatsApp(
-              String(bingo.numero_bingo),
-              bingo.telefono,
-              bingo.nombre,
-              cuotasAdeudadas > 1,
-            )
-          continue
-
-        case 33:
-          maniana.setDate(hoy.getDate() + 3)
-          if (hoy.getMonth() !== maniana.getMonth())
-            enviarMensajeWhatsApp(
-              String(bingo.numero_bingo),
-              bingo.telefono,
-              bingo.nombre,
-              cuotasAdeudadas > 1,
-            )
-          continue
-
-        default:
+      case 31:
+        maniana.setDate(hoy.getDate() + 1)
+        if (hoy.getMonth() !== maniana.getMonth())
           enviarMensajeWhatsApp(
             String(bingo.numero_bingo),
             bingo.telefono,
             bingo.nombre,
             cuotasAdeudadas > 1,
           )
-          continue
-      }
-    }
-  },
-  {
-    timezone: 'America/Argentina/Buenos_Aires',
-  },
-)
+        continue
 
-console.log('cors::::::::::::::::::::::::::::::::::::::::')
-console.log(cors.toString())
-console.log('fin cors')
+      case 32:
+        maniana.setDate(hoy.getDate() + 2)
+        if (hoy.getMonth() !== maniana.getMonth())
+          enviarMensajeWhatsApp(
+            String(bingo.numero_bingo),
+            bingo.telefono,
+            bingo.nombre,
+            cuotasAdeudadas > 1,
+          )
+        continue
+
+      case 33:
+        maniana.setDate(hoy.getDate() + 3)
+        if (hoy.getMonth() !== maniana.getMonth())
+          enviarMensajeWhatsApp(
+            String(bingo.numero_bingo),
+            bingo.telefono,
+            bingo.nombre,
+            cuotasAdeudadas > 1,
+          )
+        continue
+
+      default:
+        enviarMensajeWhatsApp(
+          String(bingo.numero_bingo),
+          bingo.telefono,
+          bingo.nombre,
+          cuotasAdeudadas > 1,
+        )
+        continue
+    }
+  }
+}
+
+// console.log('cors::::::::::::::::::::::::::::::::::::::::')
+// console.log(cors.toString())
+// console.log('fin cors')
+
+verDeAvisar()
 
 function mesesTranscurridos(inicio: Date): number {
   const hoy = new Date()
