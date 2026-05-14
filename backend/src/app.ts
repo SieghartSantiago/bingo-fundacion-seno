@@ -57,7 +57,7 @@ server.listen(PORT, () => {
   process.env.BACKEND_PORT = String(PORT)
 })
 
-cron.schedule('30 10 * * *', async (): Promise<void> => {
+cron.schedule('37 10 * * *', async (): Promise<void> => {
   console.log('schedule')
   const respFilas = await pool.query(`
     SELECT 
