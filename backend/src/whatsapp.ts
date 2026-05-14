@@ -43,11 +43,11 @@ export async function enviarMensajeWhatsApp(numBingo: string, telefono: string, 
                   },
                   {
                     type: 'text',
-                    text: cuotasPlural ? 's' : '',
+                    text: cuotasPlural ? 's' : ' ',
                   },
                   {
                     type: 'text',
-                    text: cuotasPlural ? 's' : '',
+                    text: cuotasPlural ? 's' : ' ',
                   },
                   {
                     type: 'text',
