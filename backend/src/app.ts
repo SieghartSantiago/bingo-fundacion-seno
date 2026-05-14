@@ -11,6 +11,7 @@ import bingoGetRoutes from './routes/bingo.get'
 import historialRoutes from './routes/historial'
 import bingoPostRoutes from './routes/bingo.post'
 import bingoDeleteRoutes from './routes/bingo.delete'
+import whatsappRoutes from './whatsapp'
 import { enviarMensajeWhatsApp } from './whatsapp'
 
 const limiter = rateLimit({
@@ -38,11 +39,12 @@ app.use(
   }),
 )
 app.use(bingoGetRoutes)
+app.use(loginGetRoutes)
+app.use(whatsappRoutes)
 app.use(bingoPostRoutes)
 app.use(historialRoutes)
-app.use(bingoDeleteRoutes)
 app.use(loginPostRoutes)
-app.use(loginGetRoutes)
+app.use(bingoDeleteRoutes)
 app.use(loginDeleteRoutes)
 
 io.on('connection', (socket) => {
