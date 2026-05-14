@@ -64,5 +64,3 @@ export async function enviarMensajeWhatsApp(): Promise<void> {
     console.error(error)
   }
 }
-
-enviarMensajeWhatsApp()

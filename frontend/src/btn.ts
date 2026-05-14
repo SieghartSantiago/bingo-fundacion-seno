@@ -456,11 +456,7 @@ elementosHtml.formBingo.addEventListener('submit', async (e): Promise<void> => {
     alert('Número inválido')
     return
   }
-  let telefono: string = iti.getNumber()
-  const country: string | undefined = iti.getSelectedCountryData()?.iso2
-  if (country === 'ar' && !telefono.startsWith('+549')) {
-    telefono = telefono.replace('+54', '+549')
-  }
+  const telefono: string = iti.getNumber()
 
   const arrOptionsCuotas: number[] = []
 
