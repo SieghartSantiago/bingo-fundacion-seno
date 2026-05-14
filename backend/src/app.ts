@@ -86,6 +86,9 @@ async function verDeAvisar(): Promise<void> {
 
   const filas = respFilas.rows
 
+  while (!filas)
+    await ((ms) => new Promise((resolve) => setTimeout(resolve, ms)))(10)
+
   console.log('filas||||||||||||||||||||||||||||||||||||||||||||')
 
   filas.forEach((e, index) => {
