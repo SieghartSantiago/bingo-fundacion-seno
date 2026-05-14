@@ -99,8 +99,8 @@ async function verDeAvisar(): Promise<void> {
     if (cuotasAdeudadas <= 0) continue
 
     console.log('adeuda cuotas')
-    console.log(cuotasAdeudadas)
-    console.log(bingo.configAvisos[0])
+    // console.log(cuotasAdeudadas)
+    // console.log(bingo.configAvisos[0])
 
     if (
       cuotasAdeudadas / bingo.configAvisos[0] !==
