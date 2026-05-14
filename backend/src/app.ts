@@ -102,7 +102,7 @@ async function verDeAvisar(): Promise<void> {
   for (const bingo of filas) {
     console.log('bingo||||||||||||||||||||||||||||||||||||||||||||')
     const cuotasAdeudadas: number =
-      mesesTranscurridos(bingo.mes_inicio) - bingo.cuotas.length
+      mesesTranscurridos(bingo.mes_inicio) - bingo.cuotas.length + 1
 
     console.log(cuotasAdeudadas)
     if (cuotasAdeudadas <= 0) continue
