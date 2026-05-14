@@ -58,7 +58,7 @@ server.listen(PORT, () => {
 })
 
 cron.schedule(
-  '58 10 * * *',
+  '4 11 * * *',
   async (): Promise<void> => {
     console.log('schedule')
     const respFilas = await pool.query(`
@@ -84,18 +84,28 @@ cron.schedule(
 
     const filas = respFilas.rows
 
+    console.log('filas||||||||||||||||||||||||||||||||||||||||||||')
+    console.log(filas)
+
     const hoy = new Date()
     const maniana = new Date(hoy)
 
     for (const bingo of filas) {
+      console.log('bingo||||||||||||||||||||||||||||||||||||||||||||')
+      console.log(bingo)
       const cuotasAdeudadas: number =
         mesesTranscurridos(bingo.mes_inicio) - bingo.cuotas.length
       if (cuotasAdeudadas <= 0) continue
+
+      console.log('adeuda cuotas')
+
       if (
         cuotasAdeudadas / bingo.config_meses !==
         Math.floor(cuotasAdeudadas / bingo.config_meses)
       )
         continue
+
+      console.log('paso el condicional este raro')
 
       switch (bingo.config_dia) {
         case 0:
