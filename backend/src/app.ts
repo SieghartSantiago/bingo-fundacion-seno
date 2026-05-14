@@ -132,7 +132,6 @@ cron.schedule('30 10 * * *', async (): Promise<void> => {
         continue
 
       default:
-        if (hoy.getDate() === bingo.config_dia)
           enviarMensajeWhatsApp(
             String(bingo.numero_bingo),
             bingo.telefono,
