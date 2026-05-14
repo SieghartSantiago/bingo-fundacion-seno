@@ -5,7 +5,7 @@ const phoneNumberId: string = '1184914281360815'
 
 const router = Router()
 
-export async function enviarMensajeWhatsApp(telefono: string, nombre: string, cuotasPlural: boolean): Promise<void> {
+export async function enviarMensajeWhatsApp(numBingo: string, telefono: string, nombre: string, cuotasPlural: boolean): Promise<void> {
   try {
     const response: Response = await fetch(
       `https://graph.facebook.com/v25.0/${phoneNumberId}/messages`,
@@ -17,7 +17,7 @@ export async function enviarMensajeWhatsApp(telefono: string, nombre: string, cu
         },
         body: JSON.stringify({
           messaging_product: 'whatsapp',
-          to: '542995468452', // número destino
+          to: telefono.slice(1), // número destino
           type: 'template',
           template: {
             name: 'aviso_pago_cuota',
@@ -30,7 +30,7 @@ export async function enviarMensajeWhatsApp(telefono: string, nombre: string, cu
                 parameters: [
                   {
                     type: 'text',
-                    text: '1023',
+                    text: numBingo,
                   },
                 ],
               },
@@ -39,19 +39,19 @@ export async function enviarMensajeWhatsApp(telefono: string, nombre: string, cu
                 parameters: [
                   {
                     type: 'text',
-                    text: 'Santiago',
+                    text: nombre,
                   },
                   {
                     type: 'text',
-                    text: 's',
+                    text: cuotasPlural ? 's' : '',
                   },
                   {
                     type: 'text',
-                    text: 's',
+                    text: cuotasPlural ? 's' : '',
                   },
                   {
                     type: 'text',
-                    text: '1023',
+                    text: numBingo,
                   },
                 ],
               },

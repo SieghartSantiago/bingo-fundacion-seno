@@ -102,6 +102,7 @@ cron.schedule('30 10 * * *', async (): Promise<void> => {
         maniana.setDate(hoy.getDate() + 1)
         if (hoy.getMonth() !== maniana.getMonth())
           enviarMensajeWhatsApp(
+            String(bingo.numero_bingo),
             bingo.telefono,
             bingo.nombre,
             cuotasAdeudadas > 1,
@@ -112,6 +113,7 @@ cron.schedule('30 10 * * *', async (): Promise<void> => {
         maniana.setDate(hoy.getDate() + 2)
         if (hoy.getMonth() !== maniana.getMonth())
           enviarMensajeWhatsApp(
+            String(bingo.numero_bingo),
             bingo.telefono,
             bingo.nombre,
             cuotasAdeudadas > 1,
@@ -122,6 +124,7 @@ cron.schedule('30 10 * * *', async (): Promise<void> => {
         maniana.setDate(hoy.getDate() + 3)
         if (hoy.getMonth() !== maniana.getMonth())
           enviarMensajeWhatsApp(
+            String(bingo.numero_bingo),
             bingo.telefono,
             bingo.nombre,
             cuotasAdeudadas > 1,
@@ -131,6 +134,7 @@ cron.schedule('30 10 * * *', async (): Promise<void> => {
       default:
         if (hoy.getDate() === bingo.config_dia)
           enviarMensajeWhatsApp(
+            String(bingo.numero_bingo),
             bingo.telefono,
             bingo.nombre,
             cuotasAdeudadas > 1,
