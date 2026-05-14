@@ -146,6 +146,7 @@ cron.schedule('48 10 * * *', async (): Promise<void> => {
 
 console.log('cors:')
 console.log(cors.toString())
+console.log('fin cors')
 
 function mesesTranscurridos(inicio: Date): number {
   const hoy = new Date()
