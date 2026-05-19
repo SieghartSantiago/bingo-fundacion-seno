@@ -171,9 +171,6 @@ async function verDeAvisar(): Promise<void> {
 // console.log('cors::::::::::::::::::::::::::::::::::::::::')
 // console.log(cors.toString())
 // console.log('fin cors')
-setTimeout(() => {
-  verDeAvisar()
-}, 10000)
 
 function mesesTranscurridos(inicio: Date): number {
   const hoy = new Date()
