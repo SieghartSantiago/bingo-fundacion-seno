@@ -167,6 +167,7 @@ function mostrarContenedorForm(cambiando: boolean = false): void {
   if (cargandoDatos) return
 
   if (!cambiando) elementosHtml.btnSubmitBingo.value = 'Agregar Participante'
+  mostrarElemento(elementosHtml.pantallaCargaForm, false)
   menuAddShow = true
   mostrarElemento(elementosHtml.modalFormBingo)
 }
@@ -181,6 +182,8 @@ function esconderFormUsuario(): void {
 
 function mostrarContenedorFormUsuario(cambio: boolean = false): void {
   if (cargandoDatos) return
+
+  mostrarElemento(elementosHtml.pantallaCargaFormUsuarios, false)
 
   menuAddUsuarioShow = true
 
